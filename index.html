@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Roselyne Biaou">
+    <meta name="description" content="WynaGraph Workspace - Outil de cartographie graphique 100% local. Importez vos fichiers Excel/CSV et visualisez vos connexions en toute confidentialité.">
+    <title>Wynapgraph Workspace</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="Sortable.min.js"></script>
+    <script type="module" src="app.js" defer></script>
+
+</head>
+<body>
+    <!-- Datalists pour autocomplétion -->
+  <datalist id="dl-source"></datalist>
+  <datalist id="dl-target"></datalist>
+  <datalist id="dl-relation"></datalist>
+  <input type="file" id="file-input" accept=".csv" style="display: none;">
+
+    <header>
+        <nav class="nav">
+            <div class="nav-group">
+                <a href="#welcome" class="logo">WYNAGRAPH <span>WORKSPACE</span></a>
+            </div>
+            <div class="nav-group">
+                <a href="#categories" class=" btn btn-nav">Categories</a>
+                <button id="btn-save-view" class=" btn btn-nav">Sauvegarder
+                </button>
+                <a href="#saved-views" class=" btn btn-nav">Mes graphes
+                </a>
+                <a href="#workspace"  id="#switch-view" class="btn btn-nav">
+                <span>Vue Graphe</span></a>
+                <a href="#table"  id="#switch-view" class="btn btn-nav">
+                <span>Vue Tableau</span></a>
+                
+            </div>
+            <div class="nav-group">
+                <a href="#import"  class=" btn btn-cta">Importer</a>
+                <button class="btn btn-cyan btn-sm" id="btn-export-csv">
+                <i class="fa-solid fa-download"></i> export .csv)
+                </button>
+                <button class="btn btn-cyan btn-sm" id="btn-export-json">
+                <i class="fa-solid fa-file-code"></i>export .json)
+                </button>
+                <span class="badge-local">🔒</span> 
+            </div>            
+        </nav>
+    </header>
+
+    <main>
+       <div id="page-container"> 
+        <section id="welcome"> 
+            <h1 class="titre">Personal Inventory Dashboard</h1>
+            <h2 class="sous_titre">Build your personal inventory for clarity, organization, and growth</h2>
+            <form class="welcome_form">
+              <button type="button" class=" btn btn-cta" onclick= "window.location.href='#categories';">Get Started</button>
+            </form>
+        </section>
+        <section id="categories"> 
+            <div class="header_categories">
+             <h2 class="titre">Sélectionnez un <span>Modèle</span></h2>
+             <p class="sous_titre">Cliquez sur un thème pour voir le graphe associé.</p>
+            </div>
+            <div id="RG_categories">
+             <div id="grid-preset-container" class="grid-container" ></div>
+            </div>    
+        </section>
+        <section id="import" > 
+            <div class="header_import">
+                <h2 class="titre">Importez votre <span>modèle de données</span></h2>
+                <p class="sous_titre">Glissez-deposez un fichier CSV de configuration, ou cliquez pour le sélectionner.</p>
+            </div>
+            <div id="drop-zone" >
+                <h2>WynaGraph Workspace</h2>
+                <span class="badge-local">🔒</span> 
+                <p>Toutes vos données restent sur votre appareil.</p>
+                <button class=" btn btn-cta" onclick="document.getElementById('file-input').click()">Charger un fichier CSV</button>
+                <br>
+                <p class="hint">Format attendu : Utiliser le modèle CSV fourni</p>
+            </div>
+        </section> 
+        <section id="workspace"> 
+             
+
+    <!-- Panneau gauche -->
+            <div class="panel-left" id="panel-left">
+              <button id="toggle-panel-btn" class="btn btn-cyan btn-sm">
+              <i class="fa-solid fa-bars-staggered"></i> Masquer le panneau
+              </button>
+              <div id="sidebar">
+              <h3 id="side-title" class="texte1">cliquez sur un noeud pour voir les informations
+              </h3>
+              <div id="sidebar-body"></div>
+               </div>
+              <!-- Filtres -->
+              <div class="panel">
+                <h4>Filtres d'affichage</h4>
+                <div class="form-group">
+                  <label for="f-cat">Catégorie</label>
+                  <select id="f-cat" class="form-control">
+                    <option value="">— Toutes les catégories —</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="f-node">Élément (Nœud)</label>
+                  <select id="f-node" class="form-control" >
+                    <option value="">— Tous les éléments —</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="f-rel">Type de relation</label>
+                  <select id="f-rel" class="form-control" >
+                    <option value="">— Toutes les relations —</option>
+                  </select>
+                </div>
+                <span class="info-text">💡cliquez sur un nœud pour révéler ses connexions.</span>
+                <button class="btn btn-primary btn-full" style="margin-top:12px;" onclick="resetFilters()">
+                  Réinitialiser les filtres
+                </button>
+              </div>
+
+      <!-- Ajouter une relation -->
+      <div class="panel">
+        <h4>Ajouter une relation</h4>
+        <div class="form-group">
+          <label for="add-src">Source (nouvelle ou existante)</label>
+          <input type="text" id="add-src" class="form-control" list="dl-source" placeholder="Saisir ">
+        </div>
+        <div class="form-group">
+          <label for="add-rel">Relation</label>
+          <input type="text" id="add-rel" class="form-control" list="dl-relation" placeholder="ex: Contrôle, Dépend de…">
+        </div>
+        <div class="form-group">
+          <label for="add-prop-rel">Propriété de la relation (optionnel)</label>
+          <input type="text" id="add-prop-rel" class="form-control" placeholder="ex: Quote-part : 50%">
+        </div>
+        <div class="form-group">
+          <label for="add-tgt">Cible (nouvelle ou existante)</label>
+          <input type="text" id="add-tgt" class="form-control" list="dl-target" placeholder="Saisir">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="createRelation()">
+          <i class="fa-solid fa-plus"></i> Créer la relation
+        </button>
+      </div>
+      <!-- Ajouter un élément seul -->
+      <div class="panel">
+        <h4>Ajouter un élément seul</h4>
+        <div class="form-group">
+          <label for="add-node-name">Nom de l'élément</label>
+          <input type="text" id="add-node-name" class="form-control" placeholder="ex: Serveur Production">
+        </div>
+        <div class="form-group">
+          <label for="add-node-cat">Catégorie</label>
+          <input type="text" id="add-node-cat" class="form-control" placeholder="ex: Infrastructure">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="createNode()">
+          <i class="fa-solid fa-plus"></i> Créer l'élément
+        </button>
+      </div>     
+           </div>
+<!-- Graphe -->
+            <div id="graph-container"></div>          
+        </section>
+          
+          
+        <section id="table" class="data-table">
+        </section>
+        <section id="saved-views">
+          <div class="header_saves-views">
+            <h2 class="titre"><i class="fa-solid fa-folder-open"></i> Mes Graphes<span> Personnels</span></h2>
+            <p class="sous_titre">Sélectionnez une vue pour la charger directement dans le workspace.</p>
+          </div>
+          <div id="saved-graphs">
+             <div id="grid-user-container" class="grid-container" ></div>
+          </div>
+        </section>
+       </div> 
+        
+        <!--Importer un fichier-->
+                <dialog id="paywall-modal" class="modal-overlay">
+                    <div class="modal-content panel-glass">
+                        <i class="fa-solid fa-crown"></i>
+                        <h3>Document modèle Requis</h3>
+                        <p>Importez un fichier CSV/Excel pour générer une cartographie sur mesure.</p>
+                        
+                        <a href="#import"  class="btn-cta" id="btn-close-trigger">🚀 Importer un fichier    
+                        </a>
+                        <a href="#categories" class="btn-cta" id="btn-return-trigger">Retour à la démo</a>
+                    </div>
+                </dialog> 
+    </main>
+       
+    <footer>
+      <div class="texte">© 2026 Wynagraph Version Bêta - Tous droits réservés </div>
+    </footer>
+</body>
+</html>
