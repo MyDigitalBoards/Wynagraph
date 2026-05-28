@@ -5,7 +5,8 @@ Personal inventories with graph visualization
 
 ## 📋 Vue d'ensemble
 
-**WynaGraph Workspace** est une **Application Desktop 100% locale** pour générer et visualiser des graphes de connexions. Basée sur **Vis.js**, elle permet d'explorer différents modèles de données (comptes, projets, patrimoine, etc.) sans dépendre d'Internet.
+**WynaGraph Workspace** est une **Application locale** pour PC permettant de créer, générer et visualiser des graphes de connaissances personnels. 
+Basée sur **Vis.js**, elle permet d'explorer différents modèles de données personnels (comptes, projets, patrimoine, etc.) et de conserver ses données localement. 
 
 ### Caractéristiques principales
 
