@@ -1,0 +1,203 @@
+const templatesData = {
+  mobile: [
+        { cat: "Apps", src: "iPhone 15", pSrc: "iOS 17.5", rel: "Utilise", tgt: "Application Yuka", pTgt: "Statut: Abonné Premium" },
+        { cat: "Abonnements", src: "Apple ID", rel: "Paye", tgt: "Forfait Apple Music", pTgt: "Renouvellement: 05/06" },
+        { cat: "Santé", src: "Apple Watch", pSrc: "Batterie: 85%", rel: "Synchronise", tgt: "App Santé", pTgt: "Pas totaux: 8 400" },
+        { cat: "Apps", src: "Pixel 8", pSrc: "Android 14", rel: "Héberge", tgt: "Too Good To Go", pTgt: "Dernier panier: Boulangerie" },
+        { cat: "Matériel", src: "Étui MagSafe", pSrc: "Couleur: Bleu", rel: "Protège", tgt: "iPhone 15", pTgt: "Garantie: Active" },
+        { cat: "Abonnements", src: "Google Play", rel: "Gère", tgt: "Stockage Google One", pTgt: "Utilisation: 180Go/200Go" },
+        { cat: "Apps", src: "iPad Air", pSrc: "Mode: Lecture", rel: "Ouvre", tgt: "Kindle App", pTgt: "Livre: Sapiens" },
+        { cat: "Accessoires", src: "Chargeur Secteur", pSrc: "Puissance: 30W", rel: "Alimente", tgt: "iPhone 15", pTgt: "Charge: Rapide" },
+        { cat: "Apps", src: "iPhone 15", rel: "Diffuse sur", tgt: "Spotify Connect", pTgt: "Enceinte: Sonos Salon" },
+        { cat: "Abonnements", src: "Canal+", rel: "Connecté à", tgt: "iPhone 15", pTgt: "Profil: Principal" }
+    ],
+    accounts: [
+        { cat: "Social", src: "Instagram", pSrc: "Profil: @Jdupont", rel: "Publie sur", tgt: "Galerie Photos Cloud", pTgt: "Espace: 2Go" },
+        { cat: "Banque", src: "Compte Courant", pSrc: "Solde: 2 450€", rel: "Alimente", tgt: "Épargne Livret A", pTgt: "Virement: Automatique" },
+        { cat: "Shopping", src: "Compte Amazon", pSrc: "Prime: Actif", rel: "Suivi colis", tgt: "Boîte aux lettres", pTgt: "Livraison: Demain" },
+        { cat: "Streaming", src: "Netflix", pSrc: "Forfait: Premium", rel: "Partagé avec", tgt: "Marie Dupont", pTgt: "Profil: Famille" },
+        { cat: "Voyage", src: "Compte Airbnb", pSrc: "Statut: Voyageur", rel: "Réserve", tgt: "Appartement Sicile", pTgt: "Dates: 10-17 Août" },
+        { cat: "Social", src: "Pinterest", pSrc: "Thème: Déco", rel: "Enregistre", tgt: "Tableau Salon", pTgt: "Épingles: 142" },
+        { cat: "Sport", src: "Strava", pSrc: "Activité: Vélo", rel: "Enregistre", tgt: "Parcours Forêt", pTgt: "Distance: 42km" },
+        { cat: "Administration", src: "Compte Ameli", pSrc: "Sécurité: Vitale", rel: "Gère", tgt: "Remboursements Santé", pTgt: "Dernier: 24€" },
+        { cat: "Finances", src: "PayPal", pSrc: "Solde: 45€", rel: "Paye", tgt: "Achat eBay", pTgt: "Statut: Expédié" },
+        { cat: "Cloud", src: "iCloud", pSrc: "Backup: Quotidien", rel: "Sauvegarde", tgt: "iPhone 15", pTgt: "Dernière synchro: 03h00" }
+    ],
+    followed: [
+        { cat: "Gastronomie", src: "Instagram", pSrc: "Abonné", rel: "Suit", tgt: "Chef Philippe Etchebest", pTgt: "Thématique: Cuisine" },
+        { cat: "Sport", src: "YouTube", pSrc: "Abonné", rel: "Suit", tgt: "Yoga avec Adrienne", pTgt: "Fréquence: Quotidien" },
+        { cat: "Déco", src: "Pinterest", pSrc: "Abonné", rel: "Suit", tgt: "Architectural Digest", pTgt: "Style: Moderne" },
+        { cat: "Tech", src: "Twitter", pSrc: "Abonné", rel: "Suit", tgt: "Presse-citron", pTgt: "Thème: High-Tech" },
+        { cat: "Musique", src: "Spotify", pSrc: "Abonné", rel: "Suit", tgt: "Playlist Jazz Lounge", pTgt: "Titre: Favoris" },
+        { cat: "Voyage", src: "Instagram", pSrc: "Abonné", rel: "Suit", tgt: "Lonely Planet", pTgt: "Région: Europe" },
+        { cat: "Environnement", src: "Newsletter", pSrc: "Abonné", rel: "Suit", tgt: "Greenpeace France", pTgt: "Fréquence: Mensuelle" },
+        { cat: "Cinéma", src: "Letterboxd", pSrc: "Abonné", rel: "Suit", tgt: "Critique Cinéma X", pTgt: "Genre: Thriller" },
+        { cat: "Littérature", src: "Goodreads", pSrc: "Abonné", rel: "Suit", tgt: "Club de Lecture", pTgt: "Prochaine: Juin" },
+        { cat: "Jardinage", src: "YouTube", pSrc: "Abonné", rel: "Suit", tgt: "Permaculture Urbaine", pTgt: "Conseils: Saisonniers" }
+    ],
+    emails: [
+        { cat: "Newsletter", src: "hello@madamefigaro.fr", pSrc: "Hebdo", rel: "Redirige vers", tgt: "Dossier Lecture", pTgt: "Priorité: Basse" },
+        { cat: "Perso", src: "billetterie@concert.fr", pSrc: "Ticket: #8892", rel: "Confirme", tgt: "Concert de Jazz", pTgt: "Date: 15/06/2026" },
+        { cat: "Travail", src: "rh@entreprise.com", pSrc: "Fiche de paie", rel: "Classé dans", tgt: "Dossier Impôts", pTgt: "Année: 2026" },
+        { cat: "Facture", src: "edf@client.fr", pSrc: "Montant: 85€", rel: "Payé via", tgt: "Compte Courant", pTgt: "Statut: OK" },
+        { cat: "Perso", src: "amis@voyage.com", pSrc: "Itinéraire", rel: "Partagé avec", tgt: "Marie Dupont", pTgt: "Moyen: Email" },
+        { cat: "Achats", src: "confirmation@fnac.fr", pSrc: "Commande: #123", rel: "Suivi via", tgt: "Colissimo", pTgt: "Livré: Demain" },
+        { cat: "Santé", src: "rdv@dentiste.fr", pSrc: "Rappel", rel: "Ajoute à", tgt: "Agenda Google", pTgt: "Heure: 14h30" },
+        { cat: "Social", src: "notifications@facebook.fr", pSrc: "Alerte", rel: "Supprimé par", tgt: "Corbeille", pTgt: "Date: Aujourd'hui" },
+        { cat: "Banque", src: "alerte@banque.fr", pSrc: "Virement reçu", rel: "Notifie", tgt: "Jean Dupont", pTgt: "Montant: 500€" },
+        { cat: "Loisir", src: "info@cinema.fr", pSrc: "Programme", rel: "Imprimé par", tgt: "Imprimante Bureau", pTgt: "Statut: Encre OK" }
+    ],
+    items: [
+        { cat: "Équipement", src: "Cafetière Jura", pSrc: "Modèle: E8", rel: "Nécessite", tgt: "Filtres Eau", pTgt: "Stock: 2 restants" },
+        { cat: "Loisirs", src: "Vélo de Route", pSrc: "Cadre: Carbone", rel: "Entretien chez", tgt: "Atelier Vélo Local", pTgt: "Révision: Juillet" },
+        { cat: "Maison", src: "Robot Aspirateur", pSrc: "Marque: Roomba", rel: "Nettoie", tgt: "Salon", pTgt: "Programmable: Oui" },
+        { cat: "Bureau", src: "Chaise Ergonomique", pSrc: "Modèle: Herman Miller", rel: "Utilisé par", tgt: "Jean Dupont", pTgt: "Confort: Optimal" },
+        { cat: "Cuisine", src: "Mixeur Blender", pSrc: "Puissance: 1200W", rel: "Range dans", tgt: "Placard Bas", pTgt: "État: Propre" },
+        { cat: "Jardin", src: "Barbecue Gaz", pSrc: "Marque: Weber", rel: "Couvert par", tgt: "Bâche Protection", pTgt: "État: Bon" },
+        { cat: "Sécurité", src: "Clé Yubikey", pSrc: "Version: 5C", rel: "Sécurise", tgt: "Compte Gmail", pTgt: "Usage: Quotidien" },
+        { cat: "Transport", src: "Valise Cabine", pSrc: "Dimensions: 55cm", rel: "Utilisé pour", tgt: "Voyage Sicile", pTgt: "Poids: 8kg" },
+        { cat: "Audio", src: "Casque Bluetooth", pSrc: "Sony WH-1000XM5", rel: "Chargé par", tgt: "Câble USB-C", pTgt: "Batterie: 100%" },
+        { cat: "Entretien", src: "Aspirateur Main", pSrc: "Sans fil", rel: "Range dans", tgt: "Buanderie", pTgt: "Socle: Mural" }
+    ],
+    projects: [
+        { cat: "Voyage", src: "Projet Sicile 2026", pSrc: "Budget: 1 500€", rel: "Dépend de", tgt: "Réservation Vols", pTgt: "Statut: Confirmé" },
+        { cat: "Maison", src: "Rénovation Salon", pSrc: "Peinture: Blanc", rel: "Nécessite", tgt: "Devis Artisan", pTgt: "Jalon: Validation" },
+        { cat: "Sport", src: "Prépa Marathon", pSrc: "Plan: 12 semaines", rel: "Utilise", tgt: "Chaussures Hoka", pTgt: "Progression: 40%" },
+        { cat: "Finances", src: "Épargne Logement", pSrc: "Objectif: 20k€", rel: "Alimenté par", tgt: "Prélèvement auto", pTgt: "Échéance: Mensuelle" },
+        { cat: "Cuisine", src: "Dîner Anniversaire", pSrc: "Invités: 6", rel: "Prépare", tgt: "Menu Gastronomique", pTgt: "Courses: Liste" },
+        { cat: "Santé", src: "Programme Yoga", pSrc: "App: Down Dog", rel: "Suivi par", tgt: "Marie Dupont", pTgt: "Série: 5 jours" },
+        { cat: "Technique", src: "Nettoyage PC", pSrc: "Outil: CCleaner", rel: "Optimise", tgt: "Ordinateur Bureau", pTgt: "Gain: Espace" },
+        { cat: "Jardin", src: "Potager Urbain", pSrc: "Plantes: Aromates", rel: "Nécessite", tgt: "Engrais Bio", pTgt: "Arrosage: 2/sem" },
+        { cat: "Lecture", src: "Challenge 50 livres", pSrc: "Lu: 12/50", rel: "Suivi via", tgt: "Excel", pTgt: "Retard: Non" },
+        { cat: "Projet", src: "Organisation Fête", pSrc: "Lieu: Jardin", rel: "Loue", tgt: "Chapiteau", pTgt: "Date: 14 Juillet" }
+    ],
+    documents: [
+        { cat: "Santé", src: "Carnet Vaccination", pSrc: "À jour", rel: "Contient", tgt: "Certificat DTP", pTgt: "Rappel: 2030" },
+        { cat: "Perso", src: "Dossier Propriétaire", pSrc: "Quittance", rel: "Contient", tgt: "Contrat location", pTgt: "Date: 01/01/2024" },
+        { cat: "Auto", src: "Carte Grise", pSrc: "Propriétaire: Jean", rel: "Stocké dans", tgt: "Boîte à gants", pTgt: "État: Original" },
+        { cat: "Finance", src: "Déclaration Impôts", pSrc: "Statut: Envoyé", rel: "Détient", tgt: "Revenu Annuel", pTgt: "Validation: OK" },
+        { cat: "Loisir", src: "Licence Tennis", pSrc: "Validité: 2026", rel: "Donne accès à", tgt: "Club Tennis", pTgt: "Niveau: Amateur" },
+        { cat: "Maison", src: "Assurance Habitation", pSrc: "Assureur: MAIF", rel: "Couvre", tgt: "Appartement Lyon", pTgt: "Prime: Annuelle" },
+        { cat: "Voyage", src: "Passeport", pSrc: "Expiration: 2030", rel: "Utilisé pour", tgt: "Vol Sicile", pTgt: "Visa: Aucun" },
+        { cat: "Pro", src: "Contrat Travail", pSrc: "Type: CDI", rel: "Signé le", tgt: "15 Mai 2024", pTgt: "Lieu: Paris" },
+        { cat: "Éducation", src: "Diplôme Master", pSrc: "Année: 2018", rel: "Stocké dans", tgt: "Coffre-fort Papier", pTgt: "État: Certifié" },
+        { cat: "Achats", src: "Garantie Téléviseur", pSrc: "Expiration: 2027", rel: "Classé dans", tgt: "Classeur Maison", pTgt: "Magasin: Darty" }
+    ],
+    clothes: [
+        { cat: "Saison", src: "Veste en Lin", pSrc: "Couleur: Beige", rel: "Nettoyé chez", tgt: "Pressing Écologique", pTgt: "Date: Samedi" },
+        { cat: "Stockage", src: "Boîtes Chaussures", pSrc: "Organisateur", rel: "Range", tgt: "Basket Running", pTgt: "Modèle: Hoka" },
+        { cat: "Bureau", src: "Chemise Coton", pSrc: "Repassée", rel: "Pendue sur", tgt: "Cintre Bois", pTgt: "Couleur: Bleue" },
+        { cat: "Hiver", src: "Manteau Laine", pSrc: "Marque: Zara", rel: "Stocké dans", tgt: "Housse Vêtement", pTgt: "Protection: Anti-mites" },
+        { cat: "Sport", src: "Short Technique", pSrc: "Matière: Dry", rel: "Lavage à", tgt: "30 degrés", pTgt: "Séchage: Air" },
+        { cat: "Soirée", src: "Robe Cocktail", pSrc: "Matière: Soie", rel: "Nettoyé chez", tgt: "Pressing Luxe", pTgt: "Récupération: 10 Juin" },
+        { cat: "Accessoire", src: "Foulard Soie", pSrc: "Vintage", rel: "Range dans", tgt: "Tiroir Écharpes", pTgt: "Ordre: Couleur" },
+        { cat: "Détente", src: "Pyjama Flanelle", pSrc: "Confortable", rel: "Lavage à", tgt: "Machine Perso", pTgt: "Cycle: Délicat" },
+        { cat: "Voyage", src: "Veste Imperméable", pSrc: "Tech: Goretex", rel: "Utilisé pour", tgt: "Randonnée", pTgt: "Pliable: Oui" },
+        { cat: "Été", src: "Chapeau Paille", pSrc: "Origine: Italie", rel: "Stocké sur", tgt: "Étagère Entrée", pTgt: "État: Fragile" }
+    ],
+    contacts: [
+        { cat: "Gastronomie", src: "Le Bistrot", pSrc: "Réservation", rel: "Accueille", tgt: "Jean Dupont", pTgt: "Table: Terrasse" },
+        { cat: "Services", src: "Coach Sportif", pSrc: "Dispo: Mardi", rel: "Conseille", tgt: "Marie Dupont", pTgt: "Séance: 1h" },
+        { cat: "Pro", src: "Comptable", pSrc: "Cabinet Alpha", rel: "Gère", tgt: "Bilan Annuel", pTgt: "RDV: Juin" },
+        { cat: "Perso", src: "Dr. Martin", pSrc: "Médecin", rel: "Suit", tgt: "Jean Dupont", pTgt: "Rappel: Vaccin" },
+        { cat: "Voisinage", src: "Lucas (Voisin)", pSrc: "Aide", rel: "Arrose", tgt: "Plantes Balcon", pTgt: "Clés: Prêtées" },
+        { cat: "Famille", src: "Marie Dupont", pSrc: "Épouse", rel: "Partage", tgt: "Compte Netflix", pTgt: "Profil: Famille" },
+        { cat: "Loisir", src: "Prof de Tennis", pSrc: "Club Local", rel: "Entraîne", tgt: "Jean Dupont", pTgt: "Niveau: Progressif" },
+        { cat: "Artisan", src: "Électricien", pSrc: "Devis: 200€", rel: "Intervient sur", tgt: "Cuisine", pTgt: "Date: 12 Juin" },
+        { cat: "Ami", src: "Thomas", pSrc: "Ami Voyage", rel: "Rejoint", tgt: "Projet Sicile", pTgt: "Vols: Ok" },
+        { cat: "Administration", src: "Notaire", pSrc: "Cabinet Morin", rel: "Signe", tgt: "Acte Vente", pTgt: "Date: 2025" }
+    ],
+    books: [
+        { cat: "Lecture", src: "Le Petit Prince", pSrc: "Édition: Poche", rel: "Prêté à", tgt: "Lucas (Voisin)", pTgt: "Prêt depuis: 2 sem" },
+        { cat: "Cuisine", src: "Recettes Italiennes", pSrc: "Auteur: Gennaro", rel: "Posé sur", tgt: "Étagère Cuisine", pTgt: "Usage: Fréquent" },
+        { cat: "Finance", src: "Père Riche Père Pauvre", pSrc: "Kiyosaki", rel: "Stocké dans", tgt: "Bibliothèque Salon", pTgt: "Niveau: Milieu" },
+        { cat: "Déco", src: "Design Intérieur", pSrc: "Ed: Taschen", rel: "Utilisé pour", tgt: "Rénovation Salon", pTgt: "Inspiration: OK" },
+        { cat: "Science", src: "Sapiens", pSrc: "Harari", rel: "En cours de", tgt: "Lecture (iPad)", pTgt: "Progression: 50%" },
+        { cat: "Jardin", src: "Permaculture", pSrc: "Guide pratique", rel: "Consulté pour", tgt: "Potager Urbain", pTgt: "Saison: Printemps" },
+        { cat: "Loisir", src: "Guide de Voyage", pSrc: "Sicile 2026", rel: "Emporté pour", tgt: "Projet Sicile", pTgt: "Marque-page: Oui" },
+        { cat: "Sport", src: "Marathon pour tous", pSrc: "Guide technique", rel: "Utilisé pour", tgt: "Prépa Marathon", pTgt: " Chapitre: 3" },
+        { cat: "Enfant", src: "Contes de Grimm", pSrc: "Collection", rel: "Lu par", tgt: "Coucher Enfant", pTgt: "Fréquence: Soir" },
+        { cat: "Art", src: "Histoire de l'Art", pSrc: "Phaidon", rel: "Exposé dans", tgt: "Table Basse", pTgt: "État: Très bon" }
+    ],
+    patrimoine: [
+        { cat: "Loisirs", src: "Club Tennis", pSrc: "Licence 2026", rel: "Permet accès à", tgt: "Court de Tennis n°4", pTgt: "Réservé: 10h" },
+        { cat: "Événements", src: "Festival Jazz", pSrc: "Zone: VIP", rel: "Donne accès à", tgt: "Soirée Ouverture", pTgt: "Date: 12/07" },
+        { cat: "Finance", src: "Épargne", pSrc: "Livret A", rel: "Soutient", tgt: "Projet Sicile", pTgt: "Montant: Alloué" },
+        { cat: "Immo", src: "Appartement", pSrc: "Loyer: 800€", rel: "Assuré par", tgt: "Assurance Habitation", pTgt: "État: Assuré" },
+        { cat: "Invest", src: "Bourse", pSrc: "ETF Monde", rel: "Géré par", tgt: "Compte Titres", pTgt: "Performance: +5%" },
+        { cat: "Culture", src: "Musée", pSrc: "Carte Membre", rel: "Offre entrée à", tgt: "Exposition Été", pTgt: "Validité: Annuelle" },
+        { cat: "Santé", src: "Mutuelle", pSrc: "Remboursement", rel: "Couvre", tgt: "Frais Dentiste", pTgt: "Taux: 100%" },
+        { cat: "Auto", src: "Véhicule", pSrc: "Assurance", rel: "Protège", tgt: "Carte Grise", pTgt: "Usage: Mixte" },
+        { cat: "Loisir", src: "Abonnement", pSrc: "Stream VOD", rel: "Détient", tgt: "Accès Netflix", pTgt: "Profil: Principal" },
+        { cat: "Projet", src: "Jardin", pSrc: "Aménagement", rel: "Valorise", tgt: "Appartement", pTgt: "Plus-value: Est." }
+    ],
+    nutriments: [
+        { cat: "Fruits", src: "Kiwi", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Dose: 93mg" },
+        { cat: "Fruits", src: "Avocat", pSrc: "100g", rel: "Apporte", tgt: "Vitamine E", pTgt: "Action: Antioxydant" },
+        { cat: "Fruits", src: "Abricot", pSrc: "100g", rel: "Apporte", tgt: "Bêta-carotène", pTgt: "Action: Vision" },
+        { cat: "Fruits", src: "Citron", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Action: Immunité" },
+        { cat: "Fruits", src: "Banane", pSrc: "100g", rel: "Apporte", tgt: "Vitamine B6", pTgt: "Action: Métabolisme" },
+        { cat: "Fruits", src: "Fraise", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Action: Collagène" },
+        { cat: "Fruits", src: "Orange", pSrc: "100g", rel: "Apporte", tgt: "Folate", pTgt: "Action: Sang" },
+        { cat: "Fruits", src: "Mangue", pSrc: "100g", rel: "Apporte", tgt: "Vitamine A", pTgt: "Action: Peau" },
+        { cat: "Fruits", src: "Papaye", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Action: Digestion" },
+        { cat: "Fruits", src: "Cassis", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Taux: 200mg" }
+    ],
+    fitness: [
+        { cat: "Exercice", src: "Squat", pSrc: "Poids libre", rel: "Sollicite", tgt: "Quadriceps", pTgt: "Action: Puissance" },
+        { cat: "Exercice", src: "Tractions", pSrc: "Barre fixe", rel: "Sollicite", tgt: "Dorsaux", pTgt: "Action: Posture" },
+        { cat: "Exercice", src: "Pompes", pSrc: "Poids corps", rel: "Sollicite", tgt: "Pectoraux", pTgt: "Action: Poussée" },
+        { cat: "Exercice", src: "Fentes", pSrc: "Poids corps", rel: "Sollicite", tgt: "Fessiers", pTgt: "Action: Équilibre" },
+        { cat: "Exercice", src: "Gainage", pSrc: "Statique", rel: "Sollicite", tgt: "Abdominaux", pTgt: "Action: Stabilité" },
+        { cat: "Exercice", src: "Dips", pSrc: "Banc", rel: "Sollicite", tgt: "Triceps", pTgt: "Action: Extension" },
+        { cat: "Exercice", src: "Soulevé de terre", pSrc: "Barre", rel: "Sollicite", tgt: "Ischio-jambiers", pTgt: "Action: Chaîne post." },
+        { cat: "Exercice", src: "Développé militaire", pSrc: "Haltères", rel: "Sollicite", tgt: "Deltoïdes", pTgt: "Action: Épaules" },
+        { cat: "Exercice", src: "Leg Press", pSrc: "Machine", rel: "Sollicite", tgt: "Quadriceps", pTgt: "Action: Force" },
+        { cat: "Exercice", src: "Rowing", pSrc: "Haltère", rel: "Sollicite", tgt: "Trapèzes", pTgt: "Action: Dos" }
+    ],
+    relations_bibliques: [
+        { cat: "Alliance", src: "David", pSrc: "Roi", rel: "Allié à", tgt: "Jonathan", pTgt: "Lien: Pacte d'âme" },
+        { cat: "Mentor", src: "Paul", pSrc: "Apôtre", rel: "Mentor de", tgt: "Timothée", pTgt: "Lien: Transmission" },
+        { cat: "Fidélité", src: "Ruth", pSrc: "Étrangère", rel: "Fidèle à", tgt: "Naomi", pTgt: "Lien: Loyauté" },
+        { cat: "Discipulat", src: "Jésus", pSrc: "Maître", rel: "Appelle", tgt: "Pierre", pTgt: "Lien: Restauration" },
+        { cat: "Famille", src: "Moïse", pSrc: "Prophète", rel: "Aidé par", tgt: "Aaron", pTgt: "Lien: Fraternité" },
+        { cat: "Amour", src: "Jacob", pSrc: "Patriarche", rel: "Sert pour", tgt: "Rachel", pTgt: "Lien: Persévérance" },
+        { cat: "Foi", src: "Élie", pSrc: "Prophète", rel: "Transmet à", tgt: "Élisée", pTgt: "Lien: Double portion" },
+        { cat: "Mission", src: "Barnabé", pSrc: "Lévite", rel: "Accompagne", tgt: "Paul", pTgt: "Lien: Soutien" },
+        { cat: "Obéissance", src: "Abraham", pSrc: "Patriarche", rel: "Père de", tgt: "Isaac", pTgt: "Lien: Promesse" },
+        { cat: "Soutien", src: "Aquila", pSrc: "Artisan", rel: "Collabore avec", tgt: "Priscille", pTgt: "Lien: Service" }
+    ],
+    hydratation: [
+        { cat: "Fluides", src: "Eau Minérale", pSrc: "pH 7.2", rel: "Hydrate", tgt: "Cellules", pTgt: "Action: Équilibre" },
+        { cat: "Boissons", src: "Thé Vert", pSrc: "Antioxydants", rel: "Optimise", tgt: "Métabolisme", pTgt: "Action: Drainage" },
+        { cat: "Boissons", src: "Eau Citronnée", pSrc: "Vitamine C", rel: "Soutient", tgt: "Foie", pTgt: "Action: Détox" },
+        { cat: "Boissons", src: "Eau de Coco", pSrc: "Électrolytes", rel: "Réhydrate", tgt: "Muscles", pTgt: "Action: Récup." },
+        { cat: "Boissons", src: "Infusion", pSrc: "Plantes", rel: "Apaise", tgt: "Système Nerveux", pTgt: "Action: Détente" },
+        { cat: "Boissons", src: "Bouillon", pSrc: "Minéraux", rel: "Apporte", tgt: "Sels minéraux", pTgt: "Action: Équilibre" },
+        { cat: "Fluides", src: "Eau Gazéifiée", pSrc: "Bicarbonates", rel: "Favorise", tgt: "Digestion", pTgt: "Action: Confort" },
+        { cat: "Boissons", src: "Jus de Betterave", pSrc: "Nitrates", rel: "Améliore", tgt: "Afflux sanguin", pTgt: "Action: O2" },
+        { cat: "Boissons", src: "Eau froide", pSrc: "Température", rel: "Régule", tgt: "Température corps", pTgt: "Action: Thermic" },
+        { cat: "Fluides", src: "Eau Citronnée", pSrc: "Acide", rel: "Équilibre", tgt: "pH Gastrique", pTgt: "Action: Aide" }
+    ]
+    
+};
+
+const tileConfig = [
+      { id: 'mobile', title: 'Mobile Applications', icon: 'fa-mobile-screen-button', desc: 'Vos apps, flux et abonnements associés.', special: false  },
+      { id: 'accounts', title: 'Online Accounts', icon: 'fa-cloud', desc: 'Sécurité et liaisons de vos comptes Cloud.' },
+      { id: 'followed', title: 'Followed Accounts', icon: 'fa-users', desc: 'Gestion de cercles et abonnements de veille.' },
+      { id: 'emails', title: 'Emails', icon: 'fa-envelope', desc: 'Cartographie des flux de messageries.' },
+      { id: 'items', title: 'Items', icon: 'fa-cube', desc: 'Inventaire de biens de valeur et matériels.' },
+      { id: 'projects', title: 'Projects', icon: 'fa-diagram-project', desc: 'Suivi de dépendances, livrables et jalons.' },
+      { id: 'documents', title: 'Documents', icon: 'fa-file-lines', desc: 'Indexation de pièces administratives.' },
+      { id: 'clothes', title: 'Clothes', icon: 'fa-shirt', desc: 'Garde-robe capsule et valeurs assurées.' },
+      { id: 'contacts', title: 'Contacts', icon: 'fa-address-book', desc: 'Répertoire de vos experts et conseillers.' },
+      { id: 'books', title: 'Books', icon: 'fa-book', desc: 'Bibliothèques thématiques de référence.' },
+      { id: 'patrimoine', title: 'Patrimoine Familial', icon: 'fa-vault', desc: 'Modèle complet : Holding, SCI et actifs.'},
+      { id: 'nutriments', title: 'Alimentation', icon: 'fa-vault', desc: 'Les fruits et les vitamines'},
+      { id: 'fitness', title: 'Activité physique', icon: 'fa-vault', desc: 'Excercices ciblés'},
+      { id: 'relations_bibliques', title: 'relations_bibliques', icon: 'fa-vault', desc: 'Thèmes et personnages Bibliques'},
+      { id: 'Hydratation', title: 'Boissons', icon: 'fa-vault', desc: 'Boire plus et mieux'},
+      // AJOUT : Intégration de la tuile de conversion dans la configuration
+      { id: 'new-category', title: 'Nouveau Graphe', icon: 'fa-plus', desc: 'Importez votre propre fichier CSV/Excel pour générer une cartographie sur mesure.', isCta: true }
+    ];
