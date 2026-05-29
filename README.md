@@ -150,6 +150,22 @@ Exemples :
 - Persistance localStorage partielle
 - Pour conserver des données, implémentez `localStorage`
 
+🔒 Sécurité et Confidentialité
+La philosophie de Wynagraph est le "Privacy-First". Votre inventaire personnel doit le rester, c'est pourquoi j'aifait le choix d'une architecture orientée vers la souveraineté de vos données :
+
+Stockage 100% Local : Wynagraph utilise le stockage natif de votre navigateur (IndexedDB/LocalStorage). Vos données ne quittent jamais votre machine et ne transitent par aucun serveur tiers.
+
+Architecture "Zero-Server" : Il n'y a aucune base de données centrale. Vous n'avez pas besoin de créer de compte ; vous êtes le seul et unique propriétaire de vos graphes.
+
+Transparence totale : le code est entièrement auditable sur GitHub. Vous pouvez vérifier par vous-même comment vos données sont manipulées.
+
+💡 **Bonnes pratiques pour vos données** :
+
+Bien que les données soient stockées localement sur votre machine :
+**Accès physique** : Assurez-vous de protéger l'accès à votre session utilisateur sur votre ordinateur.
+**Extensions** : Soyez vigilant quant aux extensions de navigateur que vous installez, car elles peuvent potentiellement accéder aux données des pages que vous consultez.
+**Sauvegardes** : N'oubliez pas d'utiliser régulièrement les fonctionnalités d'export (.csv / .json) pour conserver des copies de sécurité de vos graphes sur un support externe ou un espace sécurisé.
+
 ---
 
 ## 📦 Dépendances externes
@@ -167,14 +183,9 @@ Toutes les dépendances sont chargées via **CDN public**. Aucun environnement d
 ## 📄 Licence & Crédits
 
 **Développé par**: Roselyne Biaou
-
 **Stack technique**:
-
 - Vanilla JavaScript (ES6+)
 - Vis.js (Université Amsterdam)
-- FontAwesome (Fonticons)
-- Google Fonts (Inter)
-
 **Licence**:Ce projet n'a pas encore de licence officielle. Le code est partagé pour consultation, mais tous les droits restent réservés à l'auteur. L'utilisation commerciale ou la redistribution ne sont pas autorisées pour le moment. 
 
 ---
@@ -189,7 +200,7 @@ Améliorations en cours :
 4. 📈 Statistiques du graphe
 5. ✨ interface adaptée au plus petits device
 6. intégration des dépendances pour usage 1000% local
-7. ...
+7. Contrastes et accessibilité 
 
 ---
 
@@ -202,7 +213,7 @@ Améliorations en cours :
 
 ---
 
-**Dernière mise à jour**: Mai 2026
+**Dernière mise à jour**: 29 Mai 2026
 
 ## ⚠️ Statut du Projet : Version Bêta
 Ce projet est encore en plein développement (**Bêta**) :
