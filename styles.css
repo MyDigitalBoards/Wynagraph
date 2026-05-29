@@ -15,7 +15,6 @@
     --glow_cyan: 0px 0px 14px 2px rgba(66, 235, 226, 0.4);
     --glass_border: 1px solid rgba(255, 255, 255, 0.12);
     --color_surface: rgba(29, 54, 85, 0.6); 
-    --color_tile: #142a45d9;
     --color_primary: #364D68;            
     --color_cyan: #42ebe2;               
     --color_text_main: #FFFFFF;          
@@ -237,9 +236,11 @@ h3 {
   padding: 24px ;
   box-sizing: border-box;
   text-align: center;
-  height: auto ;
-  
+  height: auto ;  
+  justify-content: center;
 }
+
+
 #saved-graphs  {
   flex: 1;
   display: flex; 
@@ -260,12 +261,13 @@ h3 {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(240px, 240px)); 
   gap: 20px;
   width: 100%; 
   max-width: 960px;
   justify-items: center;
-  align-items: stretch; 
+  align-items: center; 
+  justify-content:center;
   z-index: 10;
   
 }
@@ -300,7 +302,7 @@ h3 {
       border: var(--glass_border); 
       border-radius: 8px;
       height: 200px; 
-      width: 100%;
+      width: 240px;
       aspect-ratio: 1 / 1; 
       padding: 24px; 
       position: relative; 
@@ -453,7 +455,7 @@ span {
 
 @media (max-width: 480px) {
     .grid-container {
-     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
         justify-content: center; 
         justify-items: center;
     }
