@@ -12,11 +12,6 @@
   window.edgesDataSet = edgesDataSet;
   window.network = network;
   
-  
-/* =======================================================
-       GESTION FICHIER ET IMPORT -   UTILITAIRES ET PROTECTION SÉCURITÉ
-   ======================================================= */
-
     function esc(str) {
       if (str === null || str === undefined) return '';
       return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]));
@@ -36,9 +31,7 @@
       return result;
     }
 
-/* =======================================================
-     PARSING CSV → GRAPHE
-     ======================================================= */
+
   function parseCSV(text) {
     const lines = text.split(/\r?\n/);
     if (lines.length < 2) { alert('Fichier CSV vide ou non reconnu.'); return; }
@@ -77,7 +70,7 @@
 
       const src  = get(idx.src);
       const tgt  = get(idx.tgt);
-      if (!src || !tgt) continue;
+      if (!src) continue;
 
       const cat  = get(idx.cat);
       const rel  = get(idx.rel)  || 'Lien';
@@ -93,8 +86,17 @@
       
       if (!detectedNodes[tgt]) detectedNodes[tgt] = { id: tgt, label: tgt, category: '', properties: [], attachments: [] };
       if (pTgt) pTgt.split(',').forEach(p => { const t = p.trim(); if (t && !detectedNodes[tgt].properties.includes(t)) detectedNodes[tgt].properties.push(t); });
-
-      detectedEdges.push({
+      
+      if (tgt) {
+  if (!detectedNodes[tgt]) detectedNodes[tgt] = { 
+    id: tgt, label: tgt, category: '', properties: [], attachments: [] 
+  };
+  if (pTgt) pTgt.split(',').forEach(p => { 
+    const t = p.trim(); 
+    if (t && !detectedNodes[tgt].properties.includes(t)) detectedNodes[tgt].properties.push(t); 
+      });
+      
+           detectedEdges.push({
         id: 'e_' + i + '_' + Math.random().toString(36).substr(2,4),
         from: src, to: tgt, label: rel,
         properties: pRel ? pRel.split(',').map(p => p.trim()).filter(Boolean) : [],
@@ -102,8 +104,8 @@
         color: { color: 'rgba(255,255,255,.18)', hover: '#42ebe2', highlight: '#42ebe2' },
         arrows: { to: { enabled: true, scaleFactor: .8 } }
       });
-    }
-
+      }
+  }
     
     if (!Object.keys(detectedNodes).length) { 
       alert('Aucune donnée valide détectée dans le fichier.'); 
@@ -334,9 +336,7 @@ if (btnReturn) {
       selectConnectedEdges: false, 
       dragNodes: true,
       zoomView: true,    
-      dragView: true,    
-      // navigationButtons: false ,
-      // keyboard: false
+      dragView: true, 
     },
     physics: {
       enabled: true,
@@ -515,7 +515,6 @@ function router() {
       if (network) {
         network.setSize('100%', '100%');
         network.redraw();
-        // network.fit({ animation: { duration: 700, easingFunction: 'easeInOutQuad' } });
         if (typeof applyFilters === "function") applyFilters();
       }
     }, 1500);
@@ -635,29 +634,59 @@ window.addEventListener('hashchange', router);
 
 window.saveNode = function(nodeId) {
   const node = nodesDataSet.get(nodeId);
-  if (!node) {
-    return;
+  if (!node) return;
+
+  const newLabel = document.getElementById('edit-label').value.trim();
+  const newCat   = document.getElementById('edit-cat').value.trim();
+  const newProps = document.getElementById('edit-props').value
+                   .split('\n').map(p => p.trim()).filter(Boolean);
+
+  if (!newLabel) { alert('Le nom ne peut pas être vide.'); return; }
+
+ 
+  if (newLabel === nodeId) {
+    nodesDataSet.update({ id: nodeId, label: newLabel, category: newCat, properties: newProps });
+
+  } else {
+  
+    if (nodesDataSet.get(newLabel)) { 
+      alert('Un élément avec ce nom existe déjà.'); 
+      return; 
+    }
+
+   
+    nodesDataSet.remove(nodeId);
+    nodesDataSet.add({ 
+      ...node, 
+      id:         newLabel, 
+      label:      newLabel, 
+      category:   newCat, 
+      properties: newProps 
+    });
+
+   
+    const edgesToUpdate = [];
+    edgesDataSet.forEach(e => {
+      if (e.from === nodeId || e.to === nodeId) {
+        edgesToUpdate.push({
+          id:   e.id,
+          from: e.from === nodeId ? newLabel : e.from,
+          to:   e.to   === nodeId ? newLabel : e.to
+        });
+      }
+    });
+    if (edgesToUpdate.length > 0) edgesDataSet.update(edgesToUpdate);
+
+    
+    document.getElementById('side-title').textContent = newLabel;
   }
 
- 
-  const newCat = document.getElementById('edit-cat').value.trim();
-  const propsText = document.getElementById('edit-props').value;
-  const newProps = propsText.split('\n').map(p => p.trim()).filter(Boolean);
-
- 
-  nodesDataSet.update({
-    id: nodeId,
-    label: node.label,
-    category: newCat,
-    properties: newProps
-  });
-
- 
   if (typeof syncAllDropdowns === "function") syncAllDropdowns();
   if (typeof updateFilterLists === "function") updateFilterLists(true);
+  if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
   if (typeof applyFilters === "function") applyFilters();
-    console.log(`✅ Nœud "${nodeId}" enregistré avec succès !`);
-}
+  console.log(`✅ Nœud "${newLabel}" enregistré avec succès !`);
+};
 
 function saveCurrentView() {
   const nodes = nodesDataSet.get();
@@ -671,7 +700,7 @@ function saveCurrentView() {
    let savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
 
     const dataSize = new Blob([JSON.stringify(savedViews)]).size;
-      if (dataSize > 4 * 1024 * 1024) { // 4MB = seuil de sécurité
+      if (dataSize > 4 * 1024 * 1024) { 
       alert('Espace de stockage presque plein. Supprimez des graphes anciens.');
       return;
     }
@@ -754,7 +783,7 @@ function loadSavedViewIntoWorkspace(viewId) {
     const view = savedViews.find(v => v.id === viewId);
     if (!view) return;
 
-    // 1. Nettoyage et chargement des données
+  
     nodesDataSet.clear();
     edgesDataSet.clear();
     const cleanNodes = view.data.nodes.map(n => ({ ...n, fixed: { x: false, y: false }, x: undefined, y: undefined }));
@@ -764,7 +793,7 @@ function loadSavedViewIntoWorkspace(viewId) {
     nodesDataSet.add(cleanNodes);
     edgesDataSet.add(view.data.edges);
 
-    // 2. Mise à jour des interfaces annexes
+  
     if (!view || !isValidView(view)) {
       console.warn('Vue corrompue ou invalide, chargement annulé');
       return;
@@ -773,23 +802,20 @@ function loadSavedViewIntoWorkspace(viewId) {
     if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
     if (typeof applyFilters === "function") applyFilters();
 
-    // 3. Animation propre via l'événement natif
+  
     if (network) {
         network.setOptions({ physics: { enabled: true } });
         
-        // On attend que la physique ait fini de placer les nœuds
+      
         network.once('stabilizationIterationsDone', () => {
-            // Optionnel : Désactiver la physique pour figer le graphe après stabilisation
             network.setOptions({ physics: { enabled: false } });
-            
-            // Un seul fit() fluide
+          
             network.fit({ 
                 animation: { duration: 500, easingFunction: 'easeOutQuad' } 
             });
         });
     }
 
-    // Un seul changement de hash
     window.location.hash = "#workspace";
 }
 
@@ -1079,6 +1105,10 @@ function openNodeSidebar(node) {
 
       body.innerHTML = `
     <div class="form-group">
+      <label class="prop-label" for="edit-label">Nom</label>
+      <input type="text" id="edit-label" class="sidebar-edit-input" value="${esc(node.label || '')}">
+    </div>  
+    <div class="form-group">
       <label class="prop-label" for="edit-cat">Catégorie</label>
       <input type="text" id="edit-cat" class="sidebar-edit-input" value="${esc(node.category || '')}">
     </div>
@@ -1101,13 +1131,11 @@ function applySearch() {
   const query = document.getElementById('search-global').value.toLowerCase().trim();
   
   if (!query) {
-    // Rien saisi → tout afficher
     nodesDataSet.forEach(n => nodesDataSet.update({ id: n.id, hidden: false }));
     edgesDataSet.forEach(e => edgesDataSet.update({ id: e.id, hidden: false }));
     return;
   }
 
-  // Trouver les edges qui matchent la relation
   const matchedEdgeIds = [];
   edgesDataSet.forEach(e => {
     if (e.label && e.label.toLowerCase().includes(query)) {
@@ -1115,7 +1143,6 @@ function applySearch() {
     }
   });
 
-  // Trouver les noeuds connectés à ces edges
   const nodesFromEdges = [];
   edgesDataSet.forEach(e => {
     if (matchedEdgeIds.includes(e.id)) {
@@ -1124,7 +1151,6 @@ function applySearch() {
     }
   });
 
-  // Mettre à jour la visibilité des noeuds
   nodesDataSet.forEach(n => {
     const matchNode = n.label && n.label.toLowerCase().includes(query);
     const matchCat  = n.category && n.category.toLowerCase().includes(query);
@@ -1134,7 +1160,6 @@ function applySearch() {
     nodesDataSet.update({ id: n.id, hidden: !isVisible });
   });
 
-  // Masquer les edges dont les deux noeuds ne sont pas visibles
   edgesDataSet.forEach(e => {
     const fromVisible = !nodesDataSet.get(e.from)?.hidden;
     const toVisible   = !nodesDataSet.get(e.to)?.hidden;
@@ -1147,7 +1172,6 @@ function resetSearch() {
   applySearch();
 }
 
-// Recherche en temps réel
 document.getElementById('search-global').addEventListener('input', applySearch);
 
 
@@ -1179,8 +1203,6 @@ function openEdgeSidebar(edge) {
 
       document.getElementById('sidebar');
 }
-
-
 
 window.closeSidebar = function() {
   const sidebar = document.getElementById('sidebar');
