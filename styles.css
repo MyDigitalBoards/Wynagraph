@@ -875,3 +875,31 @@ span {
   margin-top: 4px;
   padding-top: 8px;
 }
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-wrapper input {
+  padding-right: 32px;
+  width: 100%;
+}
+
+#search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+  display: none;
+}
+#search-clear:hover {
+  color: #42ebe2;
+}

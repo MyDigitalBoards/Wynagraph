@@ -88,15 +88,15 @@
               <i class="fa-solid fa-bars-staggered"></i> Masquer le panneau
               </button>
               <div class="panel">
-  <h4>Recherche globale</h4>
-  <div class="form-group">
-    <input type="text" id="search-global" class="form-control" 
-           placeholder="🔍 Nœud, catégorie, relation...">
-  </div>
-  <button class="btn btn-primary btn-full" onclick="resetSearch()">
-    Effacer
-  </button>
-</div>
+                <h4>Recherche globale</h4>
+                <div class="search-wrapper">
+                  <input type="text" id="search-global" class="form-control" 
+                        placeholder="🔍 Nœud, catégorie, relation...">
+                  <button id="search-clear" onclick="resetSearch()">✕</button>
+                </div>
+              
+  
+              </div>
               <div id="sidebar">
               <h3 id="side-title" class="texte1">cliquez sur un noeud pour voir les informations
               </h3>
@@ -128,47 +128,47 @@
                   Réinitialiser les filtres
                 </button>
               </div>
-
+            
   
-      <div class="panel">
-        <h4>Ajouter une relation</h4>
-        <div class="form-group">
-          <label for="add-src">Source (nouvelle ou existante)</label>
-          <input type="text" id="add-src" class="form-control" list="dl-source" placeholder="Saisir ">
-        </div>
-        <div class="form-group">
-          <label for="add-rel">Relation</label>
-          <input type="text" id="add-rel" class="form-control" list="dl-relation" placeholder="ex: Contrôle, Dépend de…">
-        </div>
-        <div class="form-group">
-          <label for="add-prop-rel">Propriété de la relation (optionnel)</label>
-          <input type="text" id="add-prop-rel" class="form-control" placeholder="ex: Quote-part : 50%">
-        </div>
-        <div class="form-group">
-          <label for="add-tgt">Cible (nouvelle ou existante)</label>
-          <input type="text" id="add-tgt" class="form-control" list="dl-target" placeholder="Saisir">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="createRelation()">
-          <i class="fa-solid fa-plus"></i> Créer la relation
-        </button>
-      </div>
+              <div class="panel">
+                <h4>Ajouter une relation</h4>
+                <div class="form-group">
+                  <label for="add-src">Source (nouvelle ou existante)</label>
+                  <input type="text" id="add-src" class="form-control" list="dl-source" placeholder="Saisir ">
+                </div>
+                <div class="form-group">
+                  <label for="add-rel">Relation</label>
+                  <input type="text" id="add-rel" class="form-control" list="dl-relation" placeholder="ex: Contrôle, Dépend de…">
+                </div>
+                <div class="form-group">
+                  <label for="add-prop-rel">Propriété de la relation (optionnel)</label>
+                  <input type="text" id="add-prop-rel" class="form-control" placeholder="ex: Quote-part : 50%">
+                </div>
+                <div class="form-group">
+                  <label for="add-tgt">Cible (nouvelle ou existante)</label>
+                  <input type="text" id="add-tgt" class="form-control" list="dl-target" placeholder="Saisir">
+                </div>
+                <button class="btn btn-primary btn-full" onclick="createRelation()">
+                  <i class="fa-solid fa-plus"></i> Créer la relation
+                </button>
+              </div>
 
-      <div class="panel">
-        <h4>Ajouter un élément seul</h4>
-        <div class="form-group">
-          <label for="add-node-name">Nom de l'élément</label>
-          <input type="text" id="add-node-name" class="form-control" placeholder="ex: Serveur Production">
-        </div>
-        <div class="form-group">
-          <label for="add-node-cat">Catégorie</label>
-          <input type="text" id="add-node-cat" class="form-control" placeholder="ex: Infrastructure">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="createNode()">
-          <i class="fa-solid fa-plus"></i> Créer l'élément
-        </button>
-      </div>     
-           </div>
-
+              <div class="panel">
+                <h4>Ajouter un élément seul</h4>
+                <div class="form-group">
+                  <label for="add-node-name">Nom de l'élément</label>
+                  <input type="text" id="add-node-name" class="form-control" placeholder="ex: Serveur Production">
+                </div>
+                <div class="form-group">
+                  <label for="add-node-cat">Catégorie</label>
+                  <input type="text" id="add-node-cat" class="form-control" placeholder="ex: Infrastructure">
+                </div>
+                <button class="btn btn-primary btn-full" onclick="createNode()">
+                  <i class="fa-solid fa-plus"></i> Créer l'élément
+                </button>
+              </div>     
+              </div>
+          
             <div id="graph-container"></div>          
         </section>
           

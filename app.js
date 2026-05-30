@@ -1307,12 +1307,15 @@ function applySearch() {
 
 function resetSearch() {
   document.getElementById('search-global').value = '';
+  document.getElementById('search-clear').style.display = 'none';
   applySearch();
 }
 
-document.getElementById('search-global').addEventListener('input', applySearch);
-
-
+document.getElementById('search-global').addEventListener('input', () => {
+  const val = document.getElementById('search-global').value;
+  document.getElementById('search-clear').style.display = val ? 'block' : 'none';
+  applySearch();
+});
 function openEdgeSidebar(edge) {
       document.getElementById('side-title').textContent = 'Relation';
       const body = document.getElementById('sidebar-body');
