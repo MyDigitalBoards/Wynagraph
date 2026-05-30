@@ -1071,6 +1071,21 @@ function applyFilters() {
 
   nodesDataSet.update(nodeUpdates);
   edgesDataSet.update(edgeUpdates);
+
+   if (isFiltered && network) {
+    const visibleNodeIds = nodeUpdates
+      .filter(n => !n.hidden)
+      .map(n => n.id);
+
+    if (visibleNodeIds.length > 0) {
+      setTimeout(() => {
+        network.fit({
+          nodes: visibleNodeIds,
+          animation: { duration: 700, easingFunction: 'easeInOutQuad' }
+        });
+      }, 50); 
+    }
+  }
 }
 
 function revealNeighbors(nodeId) {
