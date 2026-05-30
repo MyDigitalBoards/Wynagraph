@@ -334,15 +334,15 @@ if (btnReturn) {
       dragNodes: true,
       zoomView: true,    
       dragView: true,    
-      navigationButtons: false ,
-      keyboard: false
+      // navigationButtons: false ,
+      // keyboard: false
     },
     physics: {
       enabled: true,
       barnesHut: { 
         gravitationalConstant: -3500, 
         centralGravity: 0.15, 
-        springLength: 160 
+        springLength: 142 
       },
       stabilization: { 
         enabled: true,
@@ -376,14 +376,13 @@ nodes: {
 });
 
 setTimeout(() => {
-  network.setOptions({ physics: { enabled: false } });
+  network.setOptions({ physics: { enabled: true } });
   setTimeout(() => {
     network.fit({ 
       animation: { duration: 500, easingFunction: 'easeOutQuad' } 
     });
   }, 100);
 }, 1500); 
-
 
   network.on('dragStart', params => {
     if (params.nodes.length > 0) {
@@ -515,10 +514,10 @@ function router() {
       if (network) {
         network.setSize('100%', '100%');
         network.redraw();
-        network.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } });
+        // network.fit({ animation: { duration: 700, easingFunction: 'easeInOutQuad' } });
         if (typeof applyFilters === "function") applyFilters();
       }
-    }, 500);
+    }, 1500);
   }
 
   if (cleanHash === '#table') {
@@ -592,10 +591,9 @@ window.addEventListener("DOMContentLoaded", () => {
           network.redraw();
           
         }
-      }, 500);
+      }, 1500);
     }); 
   } 
-
   const exportBtn = document.getElementById('btn-export-csv');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
@@ -725,60 +723,44 @@ function saveCurrentView() {
   if (typeof renderUserSavedTiles() === "function") renderUserSavedTiles();
 }
 
-
-
 function loadSavedViewIntoWorkspace(viewId) {
-  const savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
-  const view = savedViews.find(v => v.id === viewId);
-  if (!view) return;
- 
-  nodesDataSet.clear();
-  edgesDataSet.clear();
+    const savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
+    const view = savedViews.find(v => v.id === viewId);
+    if (!view) return;
 
-  const cleanNodes = view.data.nodes.map(n => ({
-    ...n,
-    fixed: { x: false, y: false },
-    x: undefined,
-    y: undefined
-  }));
-
-  if (!network) {
-      initNetwork();
-    }
-
-
-  if (network) {
-    network.setOptions({ physics: { enabled: true } });
-  }
-   
-
-  nodesDataSet.add(cleanNodes);
-  edgesDataSet.add(view.data.edges);
-
-  if (typeof syncAllDropdowns === "function") syncAllDropdowns();
-  if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
-  if (typeof applyFilters === "function") applyFilters();
-
-  setTimeout(() => {
-  if (network) {
-    network.setSize('100%', '100%');
-    network.redraw();
+    // 1. Nettoyage et chargement des données
+    nodesDataSet.clear();
+    edgesDataSet.clear();
+    const cleanNodes = view.data.nodes.map(n => ({ ...n, fixed: { x: false, y: false }, x: undefined, y: undefined }));
     
-    network.once('stabilizationIterationsDone', () => {
-      network.setOptions({ physics: { enabled: false } });
-      setTimeout(() => {
-        network.fit({ 
-          animation: { duration: 500, easingFunction: 'easeOutQuad' } 
-        });
-      }, 100);
-    });
-    network.setOptions({ physics: { enabled: true } });
-    }
-  
-    window.location.hash = "#workspace";
-  }, 500);
+    if (!network) initNetwork();
 
-    setTimeout(() => { window.location.hash = "#workspace"; }, 100);
+    nodesDataSet.add(cleanNodes);
+    edgesDataSet.add(view.data.edges);
+
+    // 2. Mise à jour des interfaces annexes
+    if (typeof syncAllDropdowns === "function") syncAllDropdowns();
+    if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
+    if (typeof applyFilters === "function") applyFilters();
+
+    // 3. Animation propre via l'événement natif
+    if (network) {
+        network.setOptions({ physics: { enabled: true } });
+        
+        // On attend que la physique ait fini de placer les nœuds
+        network.once('stabilizationIterationsDone', () => {
+            // Optionnel : Désactiver la physique pour figer le graphe après stabilisation
+            network.setOptions({ physics: { enabled: false } });
+            
+            // Un seul fit() fluide
+            network.fit({ 
+                animation: { duration: 500, easingFunction: 'easeOutQuad' } 
+            });
+        });
+    }
+
+    // Un seul changement de hash
+    window.location.hash = "#workspace";
 }
 
 
@@ -1030,9 +1012,9 @@ function applyFilters() {
   edgesDataSet.update(edgeUpdates);
 
   
-  setTimeout(() => { 
-    if (network) network.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } }); 
-  }, 800);
+  // setTimeout(() => { 
+  //   if (network) network.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } }); 
+  // }, 100);
 }
 
 function revealNeighbors(nodeId) {

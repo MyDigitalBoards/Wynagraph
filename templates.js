@@ -120,16 +120,20 @@ const templatesData = {
         { cat: "Art", src: "Histoire de l'Art", pSrc: "Phaidon", rel: "Exposé dans", tgt: "Table Basse", pTgt: "État: Très bon" }
     ],
     patrimoine: [
-        { cat: "Loisirs", src: "Club Tennis", pSrc: "Licence 2026", rel: "Permet accès à", tgt: "Court de Tennis n°4", pTgt: "Réservé: 10h" },
-        { cat: "Événements", src: "Festival Jazz", pSrc: "Zone: VIP", rel: "Donne accès à", tgt: "Soirée Ouverture", pTgt: "Date: 12/07" },
-        { cat: "Finance", src: "Épargne", pSrc: "Livret A", rel: "Soutient", tgt: "Projet Sicile", pTgt: "Montant: Alloué" },
-        { cat: "Immo", src: "Appartement", pSrc: "Loyer: 800€", rel: "Assuré par", tgt: "Assurance Habitation", pTgt: "État: Assuré" },
-        { cat: "Invest", src: "Bourse", pSrc: "ETF Monde", rel: "Géré par", tgt: "Compte Titres", pTgt: "Performance: +5%" },
-        { cat: "Culture", src: "Musée", pSrc: "Carte Membre", rel: "Offre entrée à", tgt: "Exposition Été", pTgt: "Validité: Annuelle" },
-        { cat: "Santé", src: "Mutuelle", pSrc: "Remboursement", rel: "Couvre", tgt: "Frais Dentiste", pTgt: "Taux: 100%" },
-        { cat: "Auto", src: "Véhicule", pSrc: "Assurance", rel: "Protège", tgt: "Carte Grise", pTgt: "Usage: Mixte" },
-        { cat: "Loisir", src: "Abonnement", pSrc: "Stream VOD", rel: "Détient", tgt: "Accès Netflix", pTgt: "Profil: Principal" },
-        { cat: "Projet", src: "Jardin", pSrc: "Aménagement", rel: "Valorise", tgt: "Appartement", pTgt: "Plus-value: Est." }
+        { cat: "Famille", src: "Jean Dupont", pSrc: "Régime: Communauté réduite aux acquêts", rel: "Époux de", tgt: "Marie Dupont", pTgt: "Mariage: 12/05/2019" },
+        { cat: "Famille", src: "Jean Dupont", pSrc: "Représentant légal", rel: "Père de", tgt: "Thomas & Julie Dupont", pTgt: "Gestion: Livrets jeunes" },
+        { cat: "Sociétés", src: "Jean Dupont", pSrc: "Actionnaire majoritaire", rel: "Contrôle", tgt: "Cabinet Conseil Dupont (SARL)", pTgt: "Actionnariat: Holding Familiale" },
+        { cat: "Sociétés", src: "Holding Familiale Patrimoniale", pSrc: "Type: SAS, 99% parts", rel: "Dépend de", tgt: "Cabinet Conseil Dupont", pTgt: "Rôle: Holding" },
+        { cat: "Immobilier", src: "SCI Familiale Patrimoniale", pSrc: "Actif Immo", rel: "Propriétaire de", tgt: "Appartement Lyon", pTgt: "Dispositif: Auto-financement" },
+        { cat: "Immobilier", src: "Marie Dupont", pSrc: "Quote-part: 50%", rel: "Co-propriétaire", tgt: "Résidence Principale Paris", pTgt: "Valeur: 1.2M€" },
+        { cat: "Immobilier", src: "Villa Biarritz", pSrc: "Valeur: 800k€", rel: "Hypothéquée par", tgt: "Résidence Principale Paris", pTgt: "Garantie bancaire croisée" },
+        { cat: "Dettes", src: "Crédit Immo Lyon", pSrc: "Solde: 180k€", rel: "Adossé à", tgt: "Appartement Lyon", pTgt: "Financement: Bancaire" },
+        { cat: "Finance", src: "Assurance-vie BourseBank", pSrc: "Encours: 250k€", rel: "Investi sur", tgt: "Fonds Euro Exclusif", pTgt: "Rendement 2025: 3.30%" },
+        { cat: "Finance", src: "PEA Bourse Direct", pSrc: "Encours: 120k€", rel: "Détient", tgt: "Portefeuille Actions (LVMH/Total)", pTgt: "Conviction: Unité" },
+        { cat: "Liquidités", src: "Trésorerie Holding", pSrc: "Montant: 120k€", rel: "Placée sur", tgt: "CAT (Compte à Terme)", pTgt: "Rendement: 3.5%" },
+        { cat: "Prévoyance", src: "Assurance Emprunteur Cardif", pSrc: "Quote-part: 100% Jean", rel: "Couvre", tgt: "Crédit Immo Paris", pTgt: "Sécurité: Emprunteur" },
+        { cat: "Succession", src: "Testament Authentique", pSrc: "Déposé chez Notaire", rel: "Définit", tgt: "Transmission du patrimoine", pTgt: "Optimisation: Succession" },
+        { cat: "Mandat", src: "Mandat de Protection Future", pSrc: "Auteur: Marie Dupont", rel: "Prévoyance", tgt: "Protection des biens", pTgt: "Dispositif: Juridique" }
     ],
     nutriments: [
         { cat: "Fruits", src: "Kiwi", pSrc: "100g", rel: "Apporte", tgt: "Vitamine C", pTgt: "Dose: 93mg" },
