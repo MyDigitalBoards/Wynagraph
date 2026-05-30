@@ -87,10 +87,21 @@
              
 
     <!-- Panneau gauche -->
+     
             <div class="panel-left" id="panel-left">
               <button id="toggle-panel-btn" class="btn btn-cyan btn-sm">
               <i class="fa-solid fa-bars-staggered"></i> Masquer le panneau
               </button>
+              <div class="panel">
+  <h4>Recherche globale</h4>
+  <div class="form-group">
+    <input type="text" id="search-global" class="form-control" 
+           placeholder="🔍 Nœud, catégorie, relation...">
+  </div>
+  <button class="btn btn-primary btn-full" onclick="resetSearch()">
+    Effacer
+  </button>
+</div>
               <div id="sidebar">
               <h3 id="side-title" class="texte1">cliquez sur un noeud pour voir les informations
               </h3>

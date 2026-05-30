@@ -2,7 +2,8 @@
 {
     --background: #042042;      
     --wireframe: #2e588a;  
-    --secondary_900:#0A9196 ; 
+    --secondary_900:#0A9196 ;
+    --primaru_700: #1D3655; 
     --Primary_800:#1D3655;
     --base_shadow: #FBFCFE;
     --Primary_contrast:#ffffff;
@@ -540,7 +541,7 @@ span {
     gap: 24px;
     width: 350px;
     height: 100%;     
-    background: var(--color_surface);
+    background: var(--primaru_700);
     border-right: var(--border_glass);
     padding: 1.25rem;
     box-shadow:var(--base_shadow);
@@ -560,13 +561,14 @@ span {
     .panel-left::-webkit-scrollbar-thumb { background: rgba(66,235,226,.3); border-radius: 4px; } */
 
     .panel {
-      width: 100%;
-      box-sizing: border-box;
-      background: transparent;
-      border: none;
-      backdrop-filter: none;
-      padding: 0;
-    }
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(66, 235, 226, 0.4);
+  backdrop-filter: none;
+  padding: 16px 0;
+}
     .panel h4 {
       margin: 0 0 14px;
       color: var(--color_cyan);

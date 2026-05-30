@@ -12,6 +12,7 @@
   window.edgesDataSet = edgesDataSet;
   window.network = network;
   
+  
 /* =======================================================
        GESTION FICHIER ET IMPORT -   UTILITAIRES ET PROTECTION SÉCURITÉ
    ======================================================= */
@@ -1010,11 +1011,6 @@ function applyFilters() {
 
   nodesDataSet.update(nodeUpdates);
   edgesDataSet.update(edgeUpdates);
-
-  
-  // setTimeout(() => { 
-  //   if (network) network.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } }); 
-  // }, 100);
 }
 
 function revealNeighbors(nodeId) {
@@ -1067,6 +1063,59 @@ function openNodeSidebar(node) {
 
       document.getElementById('sidebar');
 }
+
+function applySearch() {
+  const query = document.getElementById('search-global').value.toLowerCase().trim();
+  
+  if (!query) {
+    // Rien saisi → tout afficher
+    nodesDataSet.forEach(n => nodesDataSet.update({ id: n.id, hidden: false }));
+    edgesDataSet.forEach(e => edgesDataSet.update({ id: e.id, hidden: false }));
+    return;
+  }
+
+  // Trouver les edges qui matchent la relation
+  const matchedEdgeIds = [];
+  edgesDataSet.forEach(e => {
+    if (e.label && e.label.toLowerCase().includes(query)) {
+      matchedEdgeIds.push(e.id);
+    }
+  });
+
+  // Trouver les noeuds connectés à ces edges
+  const nodesFromEdges = [];
+  edgesDataSet.forEach(e => {
+    if (matchedEdgeIds.includes(e.id)) {
+      if (!nodesFromEdges.includes(e.from)) nodesFromEdges.push(e.from);
+      if (!nodesFromEdges.includes(e.to)) nodesFromEdges.push(e.to);
+    }
+  });
+
+  // Mettre à jour la visibilité des noeuds
+  nodesDataSet.forEach(n => {
+    const matchNode = n.label && n.label.toLowerCase().includes(query);
+    const matchCat  = n.category && n.category.toLowerCase().includes(query);
+    const matchRel  = nodesFromEdges.includes(n.id);
+    
+    const isVisible = matchNode || matchCat || matchRel;
+    nodesDataSet.update({ id: n.id, hidden: !isVisible });
+  });
+
+  // Masquer les edges dont les deux noeuds ne sont pas visibles
+  edgesDataSet.forEach(e => {
+    const fromVisible = !nodesDataSet.get(e.from)?.hidden;
+    const toVisible   = !nodesDataSet.get(e.to)?.hidden;
+    edgesDataSet.update({ id: e.id, hidden: !(fromVisible && toVisible) });
+  });
+}
+
+function resetSearch() {
+  document.getElementById('search-global').value = '';
+  applySearch();
+}
+
+// Recherche en temps réel
+document.getElementById('search-global').addEventListener('input', applySearch);
 
 
 function openEdgeSidebar(edge) {
@@ -1458,5 +1507,5 @@ window.createRelation = createRelation;
 window.openNodeSidebar = openNodeSidebar;
 window.openEdgeSidebar = openEdgeSidebar;
 window.renderWorkspaceTable = renderWorkspaceTable;
-
+window.resetSearch = resetSearch;
 })();
