@@ -126,6 +126,9 @@
 function loadGraphData(rawNodes, rawEdges) {
     nodesDataSet.clear();
     edgesDataSet.clear();
+
+    document.getElementById('side-title').textContent = 'Cliquez sur un nœud pour voir les informations';
+    document.getElementById('sidebar-body').innerHTML = '';
   
        const processedNodes = rawNodes.map(n => ({
         ...n,
