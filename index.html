@@ -8,14 +8,11 @@
     <title>Wynapgraph Workspace</title>
 
     <link rel="stylesheet" href="fontawesome/css/all.min.css">
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
     <link rel="stylesheet" href="styles.css">
 
 </head>
+
 <body>
-    <!-- Datalists pour autocomplétion -->
   <datalist id="dl-source"></datalist>
   <datalist id="dl-target"></datalist>
   <datalist id="dl-relation"></datalist>
@@ -84,9 +81,7 @@
             </div>
         </section> 
         <section id="workspace"> 
-             
 
-    <!-- Panneau gauche -->
      
             <div class="panel-left" id="panel-left">
               <button id="toggle-panel-btn" class="btn btn-cyan btn-sm">
@@ -107,7 +102,7 @@
               </h3>
               <div id="sidebar-body"></div>
                </div>
-              <!-- Filtres -->
+ 
               <div class="panel">
                 <h4>Filtres d'affichage</h4>
                 <div class="form-group">
@@ -134,7 +129,7 @@
                 </button>
               </div>
 
-      <!-- Ajouter une relation -->
+  
       <div class="panel">
         <h4>Ajouter une relation</h4>
         <div class="form-group">
@@ -157,7 +152,7 @@
           <i class="fa-solid fa-plus"></i> Créer la relation
         </button>
       </div>
-      <!-- Ajouter un élément seul -->
+
       <div class="panel">
         <h4>Ajouter un élément seul</h4>
         <div class="form-group">
@@ -173,7 +168,7 @@
         </button>
       </div>     
            </div>
-<!-- Graphe -->
+
             <div id="graph-container"></div>          
         </section>
           
@@ -191,7 +186,7 @@
         </section>
        </div> 
         
-        <!--Importer un fichier-->
+  
                 <dialog id="paywall-modal" class="modal-overlay">
                     <div class="modal-content panel-glass">
                         <i class="fa-solid fa-crown"></i>
@@ -208,10 +203,11 @@
     <footer>
      
     </footer>
-
+    <div id="toast"></div>
     <script type="text/javascript" src="vis-network.min.js"></script>
     <script src="Sortable.min.js"></script>
     <script src="templates.js"></script>
     <script src="app.js" defer></script>
+    
 </body>
 </html>

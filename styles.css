@@ -815,3 +815,25 @@ span {
 .btn-cta:hover {
   transform: scale(1.05);
 }
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(29, 54, 85, 0.95);
+  border: 1px solid rgba(66, 235, 226, 0.4);
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}

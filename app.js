@@ -34,7 +34,7 @@
 
   function parseCSV(text) {
     const lines = text.split(/\r?\n/);
-    if (lines.length < 2) { alert('Fichier CSV vide ou non reconnu.'); return; }
+    if (lines.length < 2) { showToast('Fichier CSV vide ou non reconnu.',"error"); return; }
 
     const sep = lines[0].includes(';') ? ';' : ',';
 
@@ -54,7 +54,7 @@
     };
 
     if (idx.src === -1 || idx.tgt === -1) {
-      alert("Format non reconnu : le fichier doit contenir au minimum une colonne 'Source' et une colonne 'Cible'.");
+      showToast("Format non reconnu : le fichier doit contenir au minimum une colonne 'Source' et une colonne 'Cible'.","error");
       return;
     }
 
@@ -108,7 +108,7 @@
   }
     
     if (!Object.keys(detectedNodes).length) { 
-      alert('Aucune donnée valide détectée dans le fichier.'); 
+      showToast('Aucune donnée valide détectée dans le fichier.',"error"); 
       return; 
     }
 
@@ -600,7 +600,7 @@ window.addEventListener("DOMContentLoaded", () => {
        if (typeof nodesDataSet !== 'undefined' && nodesDataSet.length > 0) {
           exportCSV();
         } else {
-          alert("Action impossible : Il n'y a aucun graphique affiché à exporter !");
+          showToast("Il n'y a aucun graphique affiché à exporter !","error");
         }
       });
     }
@@ -611,7 +611,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (typeof nodesDataSet !== 'undefined' && nodesDataSet.length > 0) {
           exportToJSON();
         } else {
-          alert("Action impossible : Il n'y a aucun graphique affiché à exporter !");
+          showToast("Il n'y a aucun graphique affiché à exporter","error");
         }
       });
     }
@@ -641,7 +641,7 @@ window.saveNode = function(nodeId) {
   const newProps = document.getElementById('edit-props').value
                    .split('\n').map(p => p.trim()).filter(Boolean);
 
-  if (!newLabel) { alert('Le nom ne peut pas être vide.'); return; }
+  if (!newLabel) { showToast('Le nom ne peut pas être vide.',"error"); return; }
 
  
   if (newLabel === nodeId) {
@@ -650,7 +650,7 @@ window.saveNode = function(nodeId) {
   } else {
   
     if (nodesDataSet.get(newLabel)) { 
-      alert('Un élément avec ce nom existe déjà.'); 
+      showToast('Un élément avec ce nom existe déjà.',"error");
       return; 
     }
 
@@ -685,7 +685,7 @@ window.saveNode = function(nodeId) {
   if (typeof updateFilterLists === "function") updateFilterLists(true);
   if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
   if (typeof applyFilters === "function") applyFilters();
-  console.log(`✅ Nœud "${newLabel}" enregistré avec succès !`);
+  showToast('✅ Élément enregistré');
 };
 
 function saveCurrentView() {
@@ -693,7 +693,7 @@ function saveCurrentView() {
   const edges = edgesDataSet.get();
 
   if (nodes.length === 0) {
-    alert("Le graphe est vide, il n'y a rien à sauvegarder !");
+    showToast("Le graphe est vide, il n'y a rien à sauvegarder !","error");
     return;
   }
 
@@ -701,7 +701,7 @@ function saveCurrentView() {
 
     const dataSize = new Blob([JSON.stringify(savedViews)]).size;
       if (dataSize > 4 * 1024 * 1024) { 
-      alert('Espace de stockage presque plein. Supprimez des graphes anciens.');
+      showToast("Espace de stockage presque plein. Exportez puis supprimez des graphes anciens.","error");
       return;
     }
 
@@ -717,10 +717,10 @@ function saveCurrentView() {
         existingView.createdAt = new Date().toLocaleString(); 
         
         localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
-        alert(`✅ Le projet "${existingView.name}" a été mis à jour avec succès !`);
+        showToast(`✅ Le projet "${existingView.name}" a été mis à jour avec succès !`);
         
         if (typeof renderPresetTiles === "function") renderPresetTiles();
-        if (typeof renderUserSavedTiles() === "function") renderUserSavedTiles();
+        if (typeof renderUserSavedTiles === "function") renderUserSavedTiles();
         return; 
       }
     }
@@ -739,12 +739,12 @@ function saveCurrentView() {
         savedViews[existingViewIndex].createdAt = new Date().toLocaleString();
         
         localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
-        alert(`✅ La vue "${viewName}" a été mise à jour !`);
+        showToast(`✅ La vue "${viewName}" a été mise à jour !`);
         
         currentOpenedViewId = savedViews[existingViewIndex].id;
       
       if (typeof renderPresetTiles === "function") renderPresetTiles();
-      if (typeof renderUserSavedTiles() === "function") renderUserSavedTiles();
+      if (typeof renderUserSavedTiles === "function") renderUserSavedTiles();
       return;
       } else {
       return; 
@@ -761,11 +761,11 @@ function saveCurrentView() {
 
   savedViews.push(newView);
   localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
-  alert(`✅ Nouveau graphique "${viewName}" enregistré !`);
+  showToast(`✅ Nouveau graphique "${viewName}" enregistré !`);
 
   currentOpenedViewId = newId;
   if (typeof renderPresetTiles === "function") renderPresetTiles();
-  if (typeof renderUserSavedTiles() === "function") renderUserSavedTiles();
+  if (typeof renderUserSavedTiles === "function") renderUserSavedTiles();
 }
 
 function isValidView(view) {
@@ -826,6 +826,7 @@ window.deleteSavedView = function(viewId) {
   savedViews = savedViews.filter(v => v.id !== viewId);
   localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
   renderUserSavedTiles();
+  showToast('🗑️ vue supprimée');
 };
     window.deleteNode = function(nodeId) {
       if (!nodeId) return;
@@ -836,7 +837,7 @@ window.deleteSavedView = function(viewId) {
       nodesDataSet.remove(nodeId);
       updateFilterLists(false);
       updateAutocompleteLists();
-      
+      showToast('🗑️ Élément supprimé');      
     }
 
 
@@ -859,7 +860,7 @@ if (fileInput) {
   console.log("🚀 Fichier csv importé avec succès !");
 
   if (!file.name.endsWith('.csv')) {
-      alert("⚠️ Format incorrect. Veuillez glisser uniquement un fichier au format .csv");
+    showToast("⚠️ Format incorrect. Veuillez glisser uniquement un fichier au format .csv","error");
       return;
   }
 
@@ -867,7 +868,7 @@ if (fileInput) {
   const reader = new FileReader();
   reader.onload = e => {
     if (file.size > 5 * 1024 * 1024) { // 5MB max
-      alert('Fichier trop volumineux (max 5MB). Réduisez le nombre de lignes.');
+      showToast('Fichier trop volumineux (max 5MB). Réduisez le nombre de lignes.',"error");
       return;
     }     
       parseCSV(e.target.result);
@@ -1127,6 +1128,23 @@ function openNodeSidebar(node) {
       document.getElementById('sidebar');
 }
 
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  
+  toast.textContent = message;
+  toast.style.borderColor = type === 'error' 
+    ? 'rgba(226, 75, 74, 0.4)' 
+    : 'rgba(66, 235, 226, 0.4)';
+  
+  toast.classList.add('show');
+  
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
 function applySearch() {
   const query = document.getElementById('search-global').value.toLowerCase().trim();
   
@@ -1222,27 +1240,31 @@ window.closeSidebar = function() {
 
 window.saveEdge = function(edgeId) {
   const label = document.getElementById('edit-edge-label').value.trim();
-    if (!label) { alert('Le libellé de la relation ne peut pas être vide.'); return; }
+    if (!label) {showToast('⚠️ Le libellé ne peut pas être vide.', 'error'); 
+    return; 
+  }
     const props = document.getElementById('edit-edge-props').value
     .split('\n').map(l => l.trim()).filter(l => l.length > 0);
     edgesDataSet.update({ id: edgeId, label, properties: props });
     updateFilterLists(true);      
     applyFilters();
+    showToast('✅ Relation enregistrée');
   }
 
 window.deleteEdge = function(edgeId) {
       if (!confirm('Supprimer cette relation ?')) return;
       edgesDataSet.remove(edgeId);
       updateFilterLists(false);
-      updateAutocompleteLists();      
+      updateAutocompleteLists();  
+      showToast('🗑️ Relation supprimée');    
     }
 
 
 function createNode() {
       const name = document.getElementById('add-node-name').value.trim();
       const cat  = document.getElementById('add-node-cat').value.trim();
-      if (!name) { alert('Le nom est requis.'); return; }
-      if (nodesDataSet.get(name)) { alert('Un élément avec ce nom existe déjà.'); return; }
+      if (!name) { showToast('Le nom est requis.'); return; }
+      if (nodesDataSet.get(name)) { showToast('Un élément avec ce nom existe déjà.',"error"); return; }
 
       nodesDataSet.add({
         id: name, label: name, category: cat, properties: [], attachments: [],
@@ -1256,6 +1278,7 @@ function createNode() {
       updateFilterLists(true);
       updateAutocompleteLists();
       applyFilters();
+      showToast('✅ Élément créé');
 }
 
 function createRelation() {
@@ -1264,7 +1287,7 @@ function createRelation() {
       const pRel   = document.getElementById('add-prop-rel').value.trim();
       const tgt    = document.getElementById('add-tgt').value.trim();
 
-      if (!src || !rel || !tgt) { alert('Source, Relation et Cible sont obligatoires.'); return; }
+      if (!src || !rel || !tgt) { showToast('Source, Relation et Cible sont obligatoires.',"error"); return; }
 
     
       [src, tgt].forEach(name => {
@@ -1294,6 +1317,7 @@ function createRelation() {
       updateFilterLists(true);
       updateAutocompleteLists();
       applyFilters();
+      showToast('✅ Relation créée');
 }
 
 function renderWorkspaceTable() {
