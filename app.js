@@ -616,7 +616,18 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
+    document.addEventListener('click', e => {
+  const saveNodeBtn   = e.target.closest('[data-node-id]');
+  const deleteNodeBtn = e.target.closest('[data-delete-node-id]');
+  const saveEdgeBtn   = e.target.closest('[data-edge-id]');
+  const deleteEdgeBtn = e.target.closest('[data-delete-edge-id]');
   
+  if (saveNodeBtn)   { saveNode(saveNodeBtn.dataset.nodeId);               return; }
+  if (deleteNodeBtn) { deleteNode(deleteNodeBtn.dataset.deleteNodeId);     return; }
+  if (saveEdgeBtn)   { saveEdge(saveEdgeBtn.dataset.edgeId);               return; }
+  if (deleteEdgeBtn) { deleteEdge(deleteEdgeBtn.dataset.deleteEdgeId);     return; }
+  });
+    
 });
 
 
@@ -657,10 +668,14 @@ function saveCurrentView() {
     return;
   }
 
-  
-  let savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
+   let savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
 
-  
+    const dataSize = new Blob([JSON.stringify(savedViews)]).size;
+      if (dataSize > 4 * 1024 * 1024) { // 4MB = seuil de sécurité
+      alert('Espace de stockage presque plein. Supprimez des graphes anciens.');
+      return;
+    }
+
   if (currentOpenedViewId) {
     const existingView = savedViews.find(v => v.id === currentOpenedViewId);
     
@@ -724,6 +739,16 @@ function saveCurrentView() {
   if (typeof renderUserSavedTiles() === "function") renderUserSavedTiles();
 }
 
+function isValidView(view) {
+  return view 
+    && typeof view.id === 'string'
+    && typeof view.name === 'string'
+    && Array.isArray(view.data?.nodes)
+    && Array.isArray(view.data?.edges)
+    && view.data.nodes.every(n => typeof n.id === 'string' && typeof n.label === 'string')
+    && view.data.edges.every(e => typeof e.from === 'string' && typeof e.to === 'string');
+}
+
 function loadSavedViewIntoWorkspace(viewId) {
     const savedViews = JSON.parse(localStorage.getItem('network_saved_views')) || [];
     const view = savedViews.find(v => v.id === viewId);
@@ -740,6 +765,10 @@ function loadSavedViewIntoWorkspace(viewId) {
     edgesDataSet.add(view.data.edges);
 
     // 2. Mise à jour des interfaces annexes
+    if (!view || !isValidView(view)) {
+      console.warn('Vue corrompue ou invalide, chargement annulé');
+      return;
+      }
     if (typeof syncAllDropdowns === "function") syncAllDropdowns();
     if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
     if (typeof applyFilters === "function") applyFilters();
@@ -808,9 +837,13 @@ if (fileInput) {
       return;
   }
 
+
   const reader = new FileReader();
   reader.onload = e => {
-     
+    if (file.size > 5 * 1024 * 1024) { // 5MB max
+      alert('Fichier trop volumineux (max 5MB). Réduisez le nombre de lignes.');
+      return;
+    }     
       parseCSV(e.target.result);
       
       
@@ -1053,10 +1086,10 @@ function openNodeSidebar(node) {
       <label class="prop-label" for="edit-props">Propriétés (une par ligne)</label>
       <textarea id="edit-props" class="sidebar-edit-input">${esc((node.properties || []).join('\n'))}</textarea>
     </div>
-    <button class="btn btn-primary btn-full" style="margin-bottom:10px;" onclick="saveNode('${esc(node.id)}')">
+    <button class="btn btn-primary btn-full" style="margin-bottom:10px;"data-node-id="${esc(node.id)}">
       <i class="fa-solid fa-floppy-disk"></i> Enregistrer
     </button>
-    <button class="btn btn-danger btn-full btn-sm" onclick="deleteNode('${esc(node.id)}')">
+    <button class="btn btn-danger btn-full btn-sm" data-delete-node-id="${esc(node.id)}">
       <i class="fa-solid fa-trash"></i> Supprimer l'élément
     </button>
   `;
@@ -1136,10 +1169,10 @@ function openEdgeSidebar(edge) {
           <label class="prop-label">Propriétés de la relation (une par ligne)</label>
           <textarea id="edit-edge-props" class="sidebar-edit-input">${esc((edge.properties || []).join('\n'))}</textarea>
         </div>
-        <button class="btn btn-primary btn-full" style="margin-bottom:10px;" onclick="saveEdge('${esc(edge.id)}')">
+        <button class="btn btn-primary btn-full" style="margin-bottom:10px;" data-edge-id="${esc(edge.id)}">
           <i class="fa-solid fa-floppy-disk"></i> Enregistrer
         </button>
-        <button class="btn btn-danger btn-full btn-sm" onclick="deleteEdge('${esc(edge.id)}')">
+        <button class="btn btn-danger btn-full btn-sm" data-delete-edge-id="${esc(edge.id)}">
           <i class="fa-solid fa-trash"></i> Supprimer la relation
         </button>
       `;
