@@ -1141,6 +1141,14 @@ function openNodeSidebar(node) {
   `;
 
       document.getElementById('sidebar');
+
+      setTimeout(() => {
+    document.getElementById('sidebar').scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start' 
+    });
+  }, 50);
+
 }
 
 function showToast(message, type = 'success') {
@@ -1235,6 +1243,12 @@ function openEdgeSidebar(edge) {
       `;
 
       document.getElementById('sidebar');
+      setTimeout(() => {
+    document.getElementById('sidebar').scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start' 
+    });
+  }, 50);
 }
 
 window.closeSidebar = function() {
