@@ -3,6 +3,7 @@
     let network = null;
     const nodesDataSet = new vis.DataSet([]);
     const edgesDataSet = new vis.DataSet([]);
+    const manuallyHidden = new Set(); 
     let isFiltered     = false;
     let currentNodeId = null;
     let currentOpenedViewId = null;
@@ -405,10 +406,18 @@ setTimeout(() => {
       openNodeSidebar(nodesDataSet.get(params.nodes[0]));
     } else if (params.edges.length > 0) {
       openEdgeSidebar(edgesDataSet.get(params.edges[0]));
-    } else {
-      
-    }
+    } 
   });
+
+  network.on('oncontext', params => {
+  params.event.preventDefault(); 
+  params.event.stopPropagation();
+
+  if (params.nodes.length > 0) {
+    const nodeId = params.nodes[0];
+    showContextMenu(params.event, nodeId);
+  }
+});
 }
 
 function router() {
@@ -532,6 +541,11 @@ window.addEventListener("DOMContentLoaded", () => {
     initNetwork();
     renderPresetTiles(); 
     router();            
+
+    document.getElementById('graph-container').addEventListener('contextmenu', e => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
 
     const filterCategory = document.getElementById('f-cat');
     const filterNode     = document.getElementById('f-node');
@@ -687,6 +701,81 @@ window.saveNode = function(nodeId) {
   if (typeof applyFilters === "function") applyFilters();
   showToast('✅ Élément enregistré');
 };
+
+function showContextMenu(event, nodeId) {
+  removeContextMenu();
+
+  const menu = document.createElement('div');
+  menu.id = 'context-menu';
+  menu.innerHTML = `
+    <ul>
+      <li data-action="hide" data-node-id="${esc(nodeId)}">
+        <i class="fa-solid fa-eye-slash"></i> Cacher ce nœud
+      </li>
+      <li data-action="hide-neighbors" data-node-id="${esc(nodeId)}">
+        <i class="fa-solid fa-circle-minus"></i> Cacher ses voisins
+      </li>
+      <li data-action="reset" class="separator">
+        <i class="fa-solid fa-eye"></i> Tout réafficher
+      </li>
+    </ul>
+  `;
+
+  menu.style.left = event.clientX + 'px';
+  menu.style.top  = event.clientY + 'px';
+  document.body.appendChild(menu);
+
+  menu.addEventListener('click', e => {
+     e.stopPropagation();
+     e.preventDefault();
+    const item = e.target.closest('[data-action]');
+    if (!item) return;
+
+    const action = item.dataset.action;
+    const nId    = item.dataset.nodeId;
+
+    if (action === 'hide') {
+  manuallyHidden.add(nId);
+  edgesDataSet.forEach(edge => {
+    if (edge.from === nId || edge.to === nId) {
+      manuallyHidden.add('edge_' + edge.id);
+    }
+  });
+  applyFilters(); 
+  showToast('👁️ Nœud masqué');
+}
+
+    if (action === 'hide-neighbors') {
+  edgesDataSet.forEach(edge => {
+    if (edge.from === nId || edge.to === nId) {
+      const neighborId = edge.from === nId ? edge.to : edge.from;
+      manuallyHidden.add(neighborId);
+      manuallyHidden.add('edge_' + edge.id);
+    }
+  });
+  applyFilters();
+  showToast('👁️ Voisins masqués');
+}
+
+if (action === 'reset') {
+  manuallyHidden.clear();
+  applyFilters();
+  showToast('↩️ Vue réinitialisée');
+}
+
+    removeContextMenu();
+  });
+
+  // Fermer si clic ailleurs
+  setTimeout(() => {
+    document.addEventListener('click', removeContextMenu, { once: true });
+  }, 10);
+}
+
+function removeContextMenu() {
+  const existing = document.getElementById('context-menu');
+  if (existing) existing.remove();
+}
 
 function saveCurrentView() {
   const nodes = nodesDataSet.get();
@@ -1072,9 +1161,17 @@ function applyFilters() {
   nodesDataSet.update(nodeUpdates);
   edgesDataSet.update(edgeUpdates);
 
+  manuallyHidden.forEach(id => {
+    if (id.startsWith('edge_')) {
+      edgesDataSet.update({ id: id.replace('edge_', ''), hidden: true });
+    } else {
+      nodesDataSet.update({ id, hidden: true });
+    }
+  });
+
    if (isFiltered && network) {
     const visibleNodeIds = nodeUpdates
-      .filter(n => !n.hidden)
+      .filter(n => !n.hidden && !manuallyHidden.has(n.id)) // ✅ exclure cachés manuellement
       .map(n => n.id);
 
     if (visibleNodeIds.length > 0) {
@@ -1292,7 +1389,7 @@ window.deleteEdge = function(edgeId) {
 function createNode() {
       const name = document.getElementById('add-node-name').value.trim();
       const cat  = document.getElementById('add-node-cat').value.trim();
-      if (!name) { showToast('Le nom est requis.'); return; }
+      if (!name) { showToast('Le nom est requis.', "error"); return; }
       if (nodesDataSet.get(name)) { showToast('Un élément avec ce nom existe déjà.',"error"); return; }
 
       nodesDataSet.add({
@@ -1316,7 +1413,7 @@ function createRelation() {
       const pRel   = document.getElementById('add-prop-rel').value.trim();
       const tgt    = document.getElementById('add-tgt').value.trim();
 
-      if (!src || !rel || !tgt) { showToast('Source, Relation et Cible sont obligatoires.',"error"); return; }
+      if (!src || !rel || !tgt) { showToast('Source, Relation et Cible sont requis.',"error"); return; }
 
     
       [src, tgt].forEach(name => {
