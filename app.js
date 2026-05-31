@@ -1247,7 +1247,7 @@ function openNodeSidebar(node) {
     top: sidebar.offsetTop,
     behavior: 'smooth'
   });
-}, 150);
+}, 250);
 
 }
 
@@ -1352,7 +1352,7 @@ function openEdgeSidebar(edge) {
     top: sidebar.offsetTop,
     behavior: 'smooth'
   });
-}, 150);
+}, 250);
 }
 
 window.closeSidebar = function() {
