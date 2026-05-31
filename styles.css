@@ -923,22 +923,30 @@ span {
 @media (max-width: 768px) {
 
   .nav {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 0 16px;
     min-height: 60px;
+    justify-content: space-between; 
+    align-items: center;
     position: relative;
   }
 
+  .nav-group:not(:first-child) {
+    display: none;
+  }  
+    
   .nav-hamburger {
-    display: block; /* visible sur mobile */
+    display: block;
   }
 
-  /* Groupes cachés par défaut sur mobile */
   #nav-links,
   #nav-actions {
     display: none;
     flex-direction: column;
     width: 100%;
+    position: absolute; 
+    top: 60px;
+    left: 0;
     background: var(--background);
     padding: 12px 0;
     gap: 8px;
@@ -955,7 +963,7 @@ span {
     height: auto;
     width: 100%;
   }
-
+  
   .btn-nav, .btn-cta, .btn-cyan {
     width: 100%;
     justify-content: center;
