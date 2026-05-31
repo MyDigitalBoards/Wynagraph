@@ -931,6 +931,10 @@ span {
     position: relative;
   }
 
+  .nav-group:first-child {
+    align-self: center;
+    height: auto;
+  }
   .nav-group:not(:first-child) {
     display: none;
   }  
