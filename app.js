@@ -1345,13 +1345,14 @@ function openEdgeSidebar(edge) {
         </button>
       `;
 
-      document.getElementById('sidebar');
       setTimeout(() => {
-    document.getElementById('sidebar').scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start' 
-    });
-  }, 50);
+  const sidebar = document.getElementById('sidebar');
+  const panelLeft = document.getElementById('panel-left');
+  panelLeft.scrollTo({
+    top: sidebar.offsetTop,
+    behavior: 'smooth'
+  });
+}, 150);
 }
 
 window.closeSidebar = function() {
