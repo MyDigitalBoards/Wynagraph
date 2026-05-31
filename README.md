@@ -11,9 +11,9 @@ Basée sur **Vis.js**, elle permet d'explorer différents modèles de données p
 ### Caractéristiques principales
 
 ✅ Navigation par URL (routing avec hash)  
-✅ Gestion de graphes fluides (jusqu'à 500 nœuds)  
+✅ Gestion de graphes fluides   
 ✅ Inspecteur de propriétés interactif  
-✅ Filtrage dynamique par catégorie/élément  
+✅ Filtrage dynamique  
 ✅ 100% local (pas d'envoi de données)
 
 ---
@@ -30,10 +30,13 @@ WynaGraph Workspace
 
 ## 🚀 Démarrage Rapide
 
-### Installation
+## Essayer l'application
+👉 [Ouvrir Wynagraph](https://mydigitalboards.github.io/Wynagraph/)
 
-1. Téléchargez les 3 fichiers : `index.html`, `styles.css`, `app.js`
-2. Placez-les dans le même dossier
+### Installer l'application
+
+1. Télécharger le fichier .zip
+2. Extraire le contenu dans un même dossier
 3. Ouvrez `index.html` dans un navigateur (appui double sur le fichier)
 
 **Aucune installation ou serveur requis !**
@@ -140,18 +143,16 @@ Exemples :
 ✅ **Aucune donnée n'est envoyée à un serveur**
 
 - Tout se passe localement dans le navigateur
-- Pas de connexion Internet requise
+- Pas de connexion Internet requise (à condition de télépcharger le package)
 - Vos données restent sur votre ordinateur
 - Pas de cookies ni tracking
 
 ⚠️ **Attention**
 
-- Effraîchir la page (F5) réinitialise les changements
-- Persistance localStorage partielle
-- Pour conserver des données, implémentez `localStorage`
+- Raffraîchir la page réinitialise les changements. Pensez à sauvegarder régulièrement vos modifications et à exporter vos données.
 
 🔒 Sécurité et Confidentialité
-La philosophie de Wynagraph est le "Privacy-First". Votre inventaire personnel doit le rester, c'est pourquoi j'aifait le choix d'une architecture orientée vers la souveraineté de vos données :
+La philosophie de Wynagraph est le "Privacy-First". Votre inventaire personnel doit le rester, c'est pourquoi j'ai fait le choix d'une architecture orientée vers la souveraineté de vos données :
 
 Stockage 100% Local : Wynagraph utilise le stockage natif de votre navigateur (IndexedDB/LocalStorage). Vos données ne quittent jamais votre machine et ne transitent par aucun serveur tiers.
 
@@ -165,18 +166,6 @@ Bien que les données soient stockées localement sur votre machine :
 **Accès physique** : Assurez-vous de protéger l'accès à votre session utilisateur sur votre ordinateur.
 **Extensions** : Soyez vigilant quant aux extensions de navigateur que vous installez, car elles peuvent potentiellement accéder aux données des pages que vous consultez.
 **Sauvegardes** : N'oubliez pas d'utiliser régulièrement les fonctionnalités d'export (.csv / .json) pour conserver des copies de sécurité de vos graphes sur un support externe ou un espace sécurisé.
-
----
-
-## 📦 Dépendances externes
-
-| Bibliothèque          | Rôle             | CDN                  |
-| --------------------- | ---------------- | -------------------- |
-| **Vis.js**            | Moteur de graphe | unpkg.com            |
-| **FontAwesome 6.5.1** | Icônes           | cdnjs.cloudflare.com |
-| **Inter Font**        | Typographie      | fonts.googleapis.com |
-
-Toutes les dépendances sont chargées via **CDN public**. Aucun environnement de build requis.
 
 ---
 
@@ -194,13 +183,13 @@ Toutes les dépendances sont chargées via **CDN public**. Aucun environnement d
 
 Améliorations en cours :
 
-1. 🔍 Recherche texte plein
-2. 📊 Export PNG/SVG du graphe
+1. 📊 Exports PDF des la vue Tableau
+2. 📊 Exports PNG/SVG du graphe
 3. 🌍 Support multilingue
 4. 📈 Statistiques du graphe
 5. ✨ interface adaptée au plus petits device
-6. intégration des dépendances pour usage 1000% local
-7. Contrastes et accessibilité 
+6. Contrastes et accessibilité 
+7. 
 
 ---
 
@@ -213,7 +202,7 @@ Améliorations en cours :
 
 ---
 
-**Dernière mise à jour**: 29 Mai 2026
+**Dernière mise à jour**: 31 Mai 2026
 
 ## ⚠️ Statut du Projet : Version Bêta
 Ce projet est encore en plein développement (**Bêta**) :
