@@ -909,3 +909,76 @@ span {
 #search-clear:hover {
   color: #42ebe2;
 }
+.nav-hamburger {
+  display: none; /* caché sur desktop */
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+
+  .nav {
+    flex-wrap: wrap;
+    padding: 0 16px;
+    min-height: 60px;
+    position: relative;
+  }
+
+  .nav-hamburger {
+    display: block; /* visible sur mobile */
+  }
+
+  /* Groupes cachés par défaut sur mobile */
+  #nav-links,
+  #nav-actions {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: var(--background);
+    padding: 12px 0;
+    gap: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Menu ouvert */
+  #nav-links.open,
+  #nav-actions.open {
+    display: flex;
+  }
+
+  .nav-group {
+    height: auto;
+    width: 100%;
+  }
+
+  .btn-nav, .btn-cta, .btn-cyan {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .badge-local {
+    text-align: center;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav {
+    padding: 0 16px;
+    gap: 8px;
+  }
+
+  .btn-nav {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .btn-cyan {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+}
