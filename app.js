@@ -636,17 +636,25 @@ window.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById('nav-hamburger');
 if (hamburger) {
   hamburger.addEventListener('click', () => {
-    document.getElementById('nav-links').classList.toggle('open');
-    document.getElementById('nav-actions').classList.toggle('open');
+    const navLinks = document.getElementById('nav-links');
+    const navActions = document.getElementById('nav-actions');
     
-    // Changer l'icône
+    navLinks.classList.toggle('open');
+    navActions.classList.toggle('open');
+
+    
+    if (navLinks.classList.contains('open')) {
+      const navLinksHeight = navLinks.offsetHeight;
+      navActions.style.top = (60 + navLinksHeight) + 'px';
+    }
+
     const icon = hamburger.querySelector('i');
     icon.classList.toggle('fa-bars');
     icon.classList.toggle('fa-xmark');
   });
 }
 
-// Fermer le menu au clic sur un lien
+
 document.querySelectorAll('#nav-links a, #nav-actions a').forEach(link => {
   link.addEventListener('click', () => {
     document.getElementById('nav-links').classList.remove('open');
