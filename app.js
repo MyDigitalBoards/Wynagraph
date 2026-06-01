@@ -622,7 +622,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    const jsonBtn = document.getElementById('btn-export-json');
+  const jsonBtn = document.getElementById('btn-export-json');
     if (jsonBtn) {
       jsonBtn.addEventListener('click', () => {
         if (typeof nodesDataSet !== 'undefined' && nodesDataSet.length > 0) {
@@ -633,7 +633,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    const hamburger = document.getElementById('nav-hamburger');
+  const hamburger = document.getElementById('nav-hamburger');
 if (hamburger) {
   hamburger.addEventListener('click', () => {
     const navLinks = document.getElementById('nav-links');
@@ -642,7 +642,6 @@ if (hamburger) {
     navLinks.classList.toggle('open');
     navActions.classList.toggle('open');
 
-    
     if (navLinks.classList.contains('open')) {
       const navLinksHeight = navLinks.offsetHeight;
       navActions.style.top = (60 + navLinksHeight) + 'px';
@@ -651,21 +650,42 @@ if (hamburger) {
     const icon = hamburger.querySelector('i');
     icon.classList.toggle('fa-bars');
     icon.classList.toggle('fa-xmark');
+  }); // ← fermeture addEventListener ici
+
+  document.querySelectorAll('#nav-links a, #nav-actions a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('nav-links').classList.remove('open');
+      document.getElementById('nav-actions').classList.remove('open');
+      const icon = hamburger.querySelector('i');
+      icon.classList.add('fa-bars');
+      icon.classList.remove('fa-xmark');
+    });
   });
-}
+} 
+
+  
+  const btnOpenPanel = document.getElementById('btn-open-panel');
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const panelLeft = document.getElementById('panel-left');
+
+  if (btnOpenPanel) {
+    btnOpenPanel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      panelLeft.classList.add('drawer-open');
+      drawerOverlay.classList.add('show');
+    });
+  }
 
 
-document.querySelectorAll('#nav-links a, #nav-actions a').forEach(link => {
-  link.addEventListener('click', () => {
-    document.getElementById('nav-links').classList.remove('open');
-    document.getElementById('nav-actions').classList.remove('open');
-    const icon = hamburger.querySelector('i');
-    icon.classList.add('fa-bars');
-    icon.classList.remove('fa-xmark');
-  });
-});
-    
-    document.addEventListener('click', e => {
+
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', () => {
+      panelLeft.classList.remove('drawer-open');
+      drawerOverlay.classList.remove('show');
+    });
+  }
+      
+  document.addEventListener('click', e => {
   const saveNodeBtn   = e.target.closest('[data-node-id]');
   const deleteNodeBtn = e.target.closest('[data-delete-node-id]');
   const saveEdgeBtn   = e.target.closest('[data-edge-id]');
