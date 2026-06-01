@@ -673,6 +673,7 @@ if (hamburger) {
       e.stopPropagation();
       panelLeft.classList.add('drawer-open');
       drawerOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
     });
   }
 
@@ -680,6 +681,7 @@ if (hamburger) {
     drawerOverlay.addEventListener('click', () => {
       panelLeft.classList.remove('drawer-open');
       drawerOverlay.classList.remove('show');
+      document.body.style.overflow = '';
     });
   }
 
