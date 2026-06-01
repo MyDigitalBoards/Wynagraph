@@ -676,14 +676,23 @@ if (hamburger) {
     });
   }
 
-
-
   if (drawerOverlay) {
     drawerOverlay.addEventListener('click', () => {
       panelLeft.classList.remove('drawer-open');
       drawerOverlay.classList.remove('show');
     });
   }
+
+  if (window.innerWidth <= 768) {
+  // Scroller vers le bouton quand un input du panneau est focalisé
+  document.querySelectorAll('.panel-left input, .panel-left textarea').forEach(input => {
+    input.addEventListener('focus', () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300); // délai pour laisser le clavier s'ouvrir
+    });
+  });
+}
       
   document.addEventListener('click', e => {
   const saveNodeBtn   = e.target.closest('[data-node-id]');
