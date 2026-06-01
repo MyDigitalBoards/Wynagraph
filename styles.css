@@ -85,10 +85,10 @@ h3 {
   flex-direction: row;
   justify-content: space-between; 
   align-items: center;
-  min-height: 80px;
+  min-height: clamp(60px, 8vh, 80px);
   width: 100%;
   box-sizing: border-box;
-  padding: 0 32px; 
+  padding: 0 clamp(8px, 3vw, 32px); 
   box-shadow: 0 4px 20px  var(--secondary_700); 
   background-color: var(--background);
   z-index:999;
@@ -109,7 +109,7 @@ h3 {
 
 .logo {
   font-family:var(--font_default);
-  font-size: 20PX;
+  font-size: clamp(14px, 2vw, 20px);
   font-weight: 700;                 
   color: #FFFFFF;                  
   cursor: pointer;                 
@@ -184,9 +184,9 @@ h3 {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  row-gap: 48px;
+  gap: clamp(24px, 4vw, 48px);
   box-sizing: border-box;
-  padding:8px;
+  padding: clamp(8px, 2vw, 24px);
   background-color:var(--background); 
   margin-top: 80px;
   min-width: 320px;
@@ -203,7 +203,7 @@ h3 {
   min-width: 0px;     
   max-width: 960px;    
   height: auto;                
-  margin-top: 96px; 
+  margin-top: 0px; 
   box-sizing: border-box;      
   padding: 48px 32px;              
   background-color: var(--background);
@@ -303,7 +303,7 @@ h3 {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 240px)); 
-  gap: 20px;
+  gap: clamp(10px, 2vw, 20px);
   width: 100%; 
   max-width: 960px;
   justify-items: center;
@@ -361,7 +361,7 @@ h3 {
     }
     .tile-card:hover { transform: translateY(-4px); border-color: var(--color_cyan); box-shadow: var(--glow_cyan); }
     .tile-icon { font-size: 2.2rem; color: var(--color_cyan); margin-bottom: 8px; }
-    .tile-title { font-size: 1.3rem; font-weight: 500; color: var(--color_text_main); }
+    .tile-title { font-size: clamp(1.4rem, 4vw, 2.5rem); font-weight: 500; color: var(--color_text_main); }
 
 
     
@@ -395,7 +395,7 @@ h3 {
 }
 
 .tile-card .tile-overlay .tile-desc {
-  font-size: 1.3rem;
+  font-size: clamp(1.2rem, 3vw, 1rem);
   line-height: 1.4;
   color: #FFFFFF;
   text-align: center;
@@ -465,7 +465,7 @@ span {
 
 .titre{
   font-family:var(--font_default);
-  font-size: 40px;               
+  font-size: clamp(1.4rem, 4vw, 2.5rem);                
   font-weight: 700;                
   color: var(--Primary_contrast);                  
   line-height: 1.6;
@@ -474,22 +474,22 @@ span {
 
 .sous_titre{
   font-family:var(--font_default);
-  font-size: 20px;
+  font-size: clamp(0.85rem, 2.5vw, 1.2rem);
   color: var(--Primary_contrast);
   line-height: 1.4;  
   text-align: center;
 }
 .texte {
-  font-family:var(--font_default);
-  font-size: 10px;
+  font-family: var(--font_default);
+  font-size: clamp(9px, 1.2vw, 12px);
   color: var(--color_text_muted);
   line-height: 1.4;  
   text-align: center;
 }
 
 .texte1 {
-  font-family:var(--font_default);
-  font-size: 16px;
+  font-family: var(--font_default);
+  font-size: clamp(13px, 1.8vw, 16px);
   color: var(--base_shadow);
   line-height: 1.4;  
   text-align: center;
@@ -730,7 +730,7 @@ span {
     }
 
     /* Boutons */
-    .btn {
+    /* .btn {
       display: inline-flex;
       align-items: center;
       gap: 7px;
@@ -741,15 +741,30 @@ span {
       transition: transform .15s;
       padding: 9px 18px;
       font-size: .88rem;
-    }
-    .btn:hover { transform: translateY(-1px); }
+    } */
+
+    .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--font_default);
+  color: #FFFFFF;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box; 
+}
+    .btn:hover { transform: translateY(-1px); opacity: 0.9;}
     .btn-primary { background: var(--color_primary); color: #fff; border: 1px solid rgba(255,255,255,.35); box-shadow: var(--glow_white); }
     .btn-cyan    { background: transparent; color: var(--color_cyan); border: 1px solid var(--color_cyan); box-shadow: var(--glow_cyan); }
     .btn-ghost   { background: transparent; color: var(--color_muted); border: 1px solid rgba(255,255,255,.18); }
     .btn-danger  { background:var(--color_danger); color: var(--color_danger); border: 1px solid var(--color_danger); }
     .btn-danger:hover { background: #b13434; }
     .btn-full    { width: 100%; justify-content: center; }
-    .btn-sm      { padding: 7px 13px; font-size: .82rem; }
+    .btn-sm {padding: 7px 13px; font-size: .82rem; }
 
 .saved-view-tile {
     position: relative; 
@@ -781,42 +796,26 @@ span {
 
 .hidden{ display: none;}
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 5px;
-  font-family: var(--font_default);
-  color: #FFFFFF;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-sizing: border-box; 
-}
 
-.btn:hover {
-  opacity: 0.9;
-}
 
 .btn-nav {
   background-color: var(--background);
-  font-size: 14px;
+  font-size: clamp(11px, 1.5vw, 14px);
   font-weight: 700;
-  width: 108px;
-  padding: 8px 16px;
+  width: auto; /* ✅ plus de largeur fixe */
+  padding: clamp(4px, 0.5vw, 8px) clamp(8px, 1vw, 16px);
   box-shadow: 2px 2px 4px 2px #FBFCFE;
-  overflow: hidden;
   white-space: nowrap;
 }
 
 .btn-cta {
   background-color: var(--background);
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 14px); 
   font-weight: 700;
-  padding: 8px 16px;
+  padding: clamp(6px, 0.8vw, 8px) clamp(12px, 1.5vw, 16px); 
   box-shadow: 2px 2px 4px 2px var(--secondary_700);
 }
+
 
 .btn-cta:hover {
   transform: scale(1.05);
@@ -843,7 +842,10 @@ span {
   opacity: 1;
   transform: translateY(0);
 }
-
+/* Cacher le bouton flottant sur desktop */
+#btn-open-panel {
+  display: none;
+}
 #context-menu {
   position: fixed;
   background: rgba(20, 42, 69, 0.98);
@@ -908,4 +910,182 @@ span {
 }
 #search-clear:hover {
   color: #42ebe2;
+}
+.nav-hamburger {
+  display: none; 
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+
+  .nav {
+    flex-wrap: nowrap;
+    padding: 0 16px;
+    min-height: 60px;
+    justify-content: space-between; 
+    align-items: center;
+    position: relative;
+  }
+
+  .nav-group:first-child {
+    align-self: center;
+    height: auto;
+  }
+  .nav-group:not(:first-child) {
+    display: none;
+  }  
+    
+  .nav-hamburger {
+    display: block;
+  }
+
+  
+  .badge-local {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 4px 0;
+    border: none;
+    background: var(--background);
+  }
+
+
+  #nav-links,
+  #nav-actions {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute; 
+    top: 60px;
+    left: 0;
+    background: var(--background);
+    padding: 12px 0;
+    gap: 8px;
+    border-top: 1px solid rgba(66, 235, 226, 0.2);
+    z-index: 998;
+  }
+
+  /* Menu ouvert */
+  #nav-links.open,
+  #nav-actions.open {
+    display: flex;
+  }
+
+  .nav-group {
+    height: auto;
+    width: 100%;
+  }
+  
+  .btn-nav, .btn-cta, .btn-cyan {
+    width: 50%;
+    justify-content: center;
+  }
+
+  .badge-local {
+    text-align: center;
+    border: none;
+    background: var(--background);
+  }
+
+  /* ================================================
+   RESPONSIVE — WORKSPACE MOBILE
+   ================================================ */
+
+  #workspace {
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+  }
+
+  /* Graphe plein écran */
+  #graph-container {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+  }
+
+  /* Panel gauche en drawer */
+  .panel-left {
+    position: fixed;
+    top: 60px;
+    left: -100vw; 
+    width: 85%;
+    max-width: 360px;
+    height: calc(100vh - 60px);
+    z-index: 100;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+  }
+
+  /* Panel ouvert */
+  .panel-left.drawer-open {
+    left: 0; 
+  }
+
+  /* Overlay sombre derrière le drawer */
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 70vw; /* ← commence après le panneau */
+    width: 25vw;
+    height: calc(100vh - 60px);
+    background: rgba(0,0,0,0);
+    z-index: 99;
+  }
+
+  .drawer-overlay.show {
+    display: block;
+  }
+
+  /* Bouton flottant pour ouvrir le panneau */
+  #btn-open-panel {
+    display: flex;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color_cyan);
+    color: var(--background);
+    border: none;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    z-index: 98;
+    box-shadow: 0 4px 16px rgba(66,235,226,0.4);
+    cursor: pointer;
+  }
+
+  /* Cacher le bouton toggle existant sur mobile */
+  #toggle-panel-btn {
+    display: none;
+  }
+
+
+
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav {
+    padding: 0 16px;
+    gap: 8px;
+  }
+
+  .btn-nav {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .btn-cyan {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
 }

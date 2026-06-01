@@ -23,7 +23,10 @@
             <div class="nav-group">
                 <a href="#welcome" class="logo">WYNAGRAPH <span>WORKSPACE</span></a>
             </div>
-            <div class="nav-group">
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="nav-group" id="nav-links">
                 <a href="#categories" class=" btn btn-nav">Categories</a>
                 <button id="btn-save-view" class=" btn btn-nav">Sauvegarder
                 </button>
@@ -35,7 +38,7 @@
                 <span>Vue Tableau</span></a>
                 
             </div>
-            <div class="nav-group">
+            <div class="nav-group" id="nav-actions">
                 <a href="#import"  class=" btn btn-cta">Importer</a>
                 <button class="btn btn-cyan btn-sm" id="btn-export-csv">
                 <i class="fa-solid fa-download"></i> export .csv)
@@ -98,8 +101,7 @@
   
               </div>
               <div id="sidebar">
-              <h3 id="side-title" class="texte1">cliquez sur un noeud pour voir les informations
-              </h3>
+              <h3 id="side-title" class="texte1"></h3>
               <div id="sidebar-body"></div>
                </div>
  
@@ -198,6 +200,13 @@
                         <a href="#categories" class="btn btn-cta" id="btn-return-trigger">Retour à la démo</a>
                     </div>
                 </dialog> 
+                <!-- Overlay drawer mobile -->
+                <div class="drawer-overlay" id="drawer-overlay"></div>
+
+                <!-- Bouton flottant mobile -->
+                <button id="btn-open-panel" aria-label="Ouvrir le panneau">
+                  <i class="fa-solid fa-sliders"></i>
+                </button>
     </main>
        
     <footer>
