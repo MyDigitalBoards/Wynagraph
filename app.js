@@ -1906,6 +1906,36 @@ function exportToJSON() {
   document.body.removeChild(link);
 }
 
+function exportGraphImage(format = 'png') {
+  if (!network) {
+    showToast('⚠️ Aucun graphe à exporter', 'error');
+    return;
+  }
+
+  const canvas = document.querySelector('#graph-container canvas');
+  if (!canvas) return;
+
+  const link = document.createElement('a');
+  const filename = `wynagraph_${new Date().toLocaleDateString('fr-FR').replace(/\//g, '-')}`;
+
+  if (format === 'png') {
+    link.download = `${filename}.png`;
+    link.href = canvas.toDataURL('image/png');
+  } else if (format === 'svg') {
+    // vis.js ne supporte pas SVG natif — on convertit via canvas
+    link.download = `${filename}.png`; // fallback PNG
+    link.href = canvas.toDataURL('image/png');
+    showToast('ℹ️ Export SVG non disponible, export PNG utilisé');
+  }
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('✅ Graphe exporté !');
+}
+
+window.exportGraphImage = exportGraphImage;
+
 window.closeSidebar = closeSidebar;
 window.handleCategoryChange = handleCategoryChange;
 window.applyFilters = applyFilters;
