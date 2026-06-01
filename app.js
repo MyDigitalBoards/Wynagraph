@@ -1506,134 +1506,270 @@ function createRelation() {
       showToast('✅ Relation créée');
 }
 
-function renderWorkspaceTable() {
+// function renderWorkspaceTable() {
 
+//   const oldTable = document.getElementById('workspace-table-container');
+//   if (oldTable) oldTable.remove();
+
+
+//   const tablePage = document.getElementById('table');
+//   if (!tablePage) {
+//         return;
+//   }
+//   tablePage.innerHTML = ""; 
+
+//   const tableContainer = document.createElement('div');
+//   tableContainer.id = 'workspace-table-container';
+//   tableContainer.className = 'panel-glass';
+  
+
+//   tableContainer.style.position = 'relative'; 
+//   tableContainer.style.width = '100%';
+//   tableContainer.style.height = 'calc(100vh - 100px)';
+//   tableContainer.style.overflowY = 'auto';
+//   tableContainer.style.padding = '30px';
+//   tableContainer.style.boxSizing = 'border-box';
+
+
+//   let tableHTML = `
+//     <h4 style="margin-bottom:20px; color: #fff;">liste des Noeuds et Liaisons Détectées</h4>
+//     <table class="data-table" style="text-align: left; width: 100%; border-collapse: collapse;">
+//       <thead style="position: sticky; top: 0; background-color: #042042; z-index: 10; box-shadow: 0 2px 2px 2px #c9c9c9;">
+//         <tr>
+//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Catégorie</th>
+//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Source</th>
+//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Source</th>
+//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Relation</th>
+//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Relation</th>
+//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Cible</th>
+//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Cible</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//   `;
+
+  
+//   const sCat  = document.getElementById('f-cat') ? document.getElementById('f-cat').value.toLowerCase() : "";
+//   const sNode = document.getElementById('f-node') ? document.getElementById('f-node').value : "";
+//   const sRel  = document.getElementById('f-rel') ? document.getElementById('f-rel').value : "";
+
+
+//   const allEdges = edgesDataSet.get();
+
+//   allEdges.forEach(edge => {
+//     const fromNode = nodesDataSet.get(edge.from);
+//     const toNode = nodesDataSet.get(edge.to);
+
+//     if (fromNode && toNode) {
+
+//       const matchRel = !sRel || edge.label === sRel;
+//       const matchCat = !sCat || (fromNode.category && fromNode.category.toLowerCase() === sCat);
+//       const matchNode = !sNode || (edge.from === sNode || edge.to === sNode);
+
+   
+//       if (matchRel && matchCat && matchNode) {
+//         const cat = fromNode.category || 'Général';
+        
+     
+
+//         let sourceLi = '';
+//         if (fromNode.properties) {
+//           Object.entries(fromNode.properties)
+//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
+//             .forEach(([key, value]) => {
+//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
+//               sourceLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
+//             });
+//         }
+//         const sourceUl = sourceLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${sourceLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
+
+//         let relationLi = '';
+//         if (edge.properties) {
+//           Object.entries(edge.properties)
+//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
+//             .forEach(([key, value]) => {
+//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
+//               relationLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
+//             });
+//         }
+//         const relationUl = relationLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${relationLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
+
+     
+//         let targetLi = '';
+//         if (toNode.properties) {
+//           Object.entries(toNode.properties)
+//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
+//             .forEach(([key, value]) => {
+//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
+//               targetLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
+//             });
+//         }
+//         const targetUl = targetLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${targetLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
+
+//         const sourceLabel = fromNode.label || edge.from;
+//         const targetLabel = toNode.label || edge.to;
+        
+
+//         tableHTML += `
+//          <tr>
+//             <td style="text-align: left; vertical-align: top; padding: 10px;"><span class="badge-privacy" style="font-size:1rem; padding:2px 8px;">${cat}</span></td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px;"><strong style="color:var(--color_cyan);">${sourceLabel}</strong></td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${sourceUl}</td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px;"><i class="fa-solid fa-arrow-right" style="font-size:0.8rem; margin-right:8px; opacity:0.5;"></i>${edge.label || 'Lié à'}</td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${relationUl}</td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px;"><strong>${targetLabel}</strong></td>
+            
+//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${targetUl}</td>
+//           </tr>
+//         `;
+//       }
+//     }
+//   });
+
+//   tableHTML += `</tbody></table>`;
+//   tableContainer.innerHTML = tableHTML;
+  
+//   tablePage.appendChild(tableContainer);
+// }
+
+function renderWorkspaceTable() {
   const oldTable = document.getElementById('workspace-table-container');
   if (oldTable) oldTable.remove();
 
-
   const tablePage = document.getElementById('table');
-  if (!tablePage) {
-        return;
-  }
-  tablePage.innerHTML = ""; 
+  if (!tablePage) return;
+  tablePage.innerHTML = "";
 
   const tableContainer = document.createElement('div');
   tableContainer.id = 'workspace-table-container';
   tableContainer.className = 'panel-glass';
-  
+  tableContainer.style.cssText = 'position:relative; width:100%; height:calc(100vh - 100px); overflow-y:auto; padding:30px; box-sizing:border-box;';
 
-  tableContainer.style.position = 'relative'; 
-  tableContainer.style.width = '100%';
-  tableContainer.style.height = 'calc(100vh - 100px)';
-  tableContainer.style.overflowY = 'auto';
-  tableContainer.style.padding = '30px';
-  tableContainer.style.boxSizing = 'border-box';
+  const isMobile = window.innerWidth <= 768;
 
-
-  let tableHTML = `
-    <h4 style="margin-bottom:20px; color: #fff;">liste des Noeuds et Liaisons Détectées</h4>
-    <table class="data-table" style="text-align: left; width: 100%; border-collapse: collapse;">
-      <thead style="position: sticky; top: 0; background-color: #042042; z-index: 10; box-shadow: 0 2px 2px 2px #c9c9c9;">
-        <tr>
-          <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Catégorie</th>
-          <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Source</th>
-          <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Source</th>
-          <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Relation</th>
-          <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Relation</th>
-          <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Cible</th>
-          <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Cible</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
-
-  
-  const sCat  = document.getElementById('f-cat') ? document.getElementById('f-cat').value.toLowerCase() : "";
-  const sNode = document.getElementById('f-node') ? document.getElementById('f-node').value : "";
-  const sRel  = document.getElementById('f-rel') ? document.getElementById('f-rel').value : "";
-
+  const sCat  = document.getElementById('f-cat')?.value.toLowerCase() || "";
+  const sNode = document.getElementById('f-node')?.value || "";
+  const sRel  = document.getElementById('f-rel')?.value || "";
 
   const allEdges = edgesDataSet.get();
+  const rows = [];
 
   allEdges.forEach(edge => {
     const fromNode = nodesDataSet.get(edge.from);
-    const toNode = nodesDataSet.get(edge.to);
+    const toNode   = nodesDataSet.get(edge.to);
+    if (!fromNode || !toNode) return;
 
-    if (fromNode && toNode) {
+    const matchRel  = !sRel  || edge.label === sRel;
+    const matchCat  = !sCat  || (fromNode.category?.toLowerCase() === sCat);
+    const matchNode = !sNode || (edge.from === sNode || edge.to === sNode);
+    if (!matchRel || !matchCat || !matchNode) return;
 
-      const matchRel = !sRel || edge.label === sRel;
-      const matchCat = !sCat || (fromNode.category && fromNode.category.toLowerCase() === sCat);
-      const matchNode = !sNode || (edge.from === sNode || edge.to === sNode);
-
-   
-      if (matchRel && matchCat && matchNode) {
-        const cat = fromNode.category || 'Général';
-        
-     
-
-        let sourceLi = '';
-        if (fromNode.properties) {
-          Object.entries(fromNode.properties)
-            .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-            .forEach(([key, value]) => {
-              const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-              sourceLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-            });
-        }
-        const sourceUl = sourceLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${sourceLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-        let relationLi = '';
-        if (edge.properties) {
-          Object.entries(edge.properties)
-            .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-            .forEach(([key, value]) => {
-              const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-              relationLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-            });
-        }
-        const relationUl = relationLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${relationLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-     
-        let targetLi = '';
-        if (toNode.properties) {
-          Object.entries(toNode.properties)
-            .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-            .forEach(([key, value]) => {
-              const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-              targetLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-            });
-        }
-        const targetUl = targetLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${targetLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-        const sourceLabel = fromNode.label || edge.from;
-        const targetLabel = toNode.label || edge.to;
-        
-
-        tableHTML += `
-         <tr>
-            <td style="text-align: left; vertical-align: top; padding: 10px;"><span class="badge-privacy" style="font-size:1rem; padding:2px 8px;">${cat}</span></td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px;"><strong style="color:var(--color_cyan);">${sourceLabel}</strong></td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${sourceUl}</td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px;"><i class="fa-solid fa-arrow-right" style="font-size:0.8rem; margin-right:8px; opacity:0.5;"></i>${edge.label || 'Lié à'}</td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${relationUl}</td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px;"><strong>${targetLabel}</strong></td>
-            
-            <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${targetUl}</td>
-          </tr>
-        `;
-      }
-    }
+    rows.push({ edge, fromNode, toNode });
   });
 
-  tableHTML += `</tbody></table>`;
-  tableContainer.innerHTML = tableHTML;
+  if (isMobile) {
+    // ✅ Vue cartes mobile
+    let cardsHTML = `<h4 style="margin-bottom:20px; color:#fff; font-size:clamp(14px,4vw,18px);">Liste des Nœuds et Liaisons</h4>`;
+
+    rows.forEach(({ edge, fromNode, toNode }) => {
+      const cat = fromNode.category || 'Général';
+      const props = (fromNode.properties || []).join(', ') || '—';
+      const targetProps = (toNode.properties || []).join(', ') || '—';
+      const relProps = (edge.properties || []).join(', ') || '—';
+
+      cardsHTML += `
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(66,235,226,0.15); border-radius:10px; padding:14px; margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-size:11px; background:rgba(66,235,226,0.15); color:#42ebe2; padding:2px 8px; border-radius:4px;">${esc(cat)}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+            <strong style="color:#42ebe2;">${esc(fromNode.label)}</strong>
+            <span style="opacity:0.5; font-size:12px;">→ ${esc(edge.label || 'Lié à')} →</span>
+            <strong style="color:#fff;">${esc(toNode.label)}</strong>
+          </div>
+          ${props !== '—' ? `<div style="font-size:12px; opacity:0.6; margin-bottom:4px;">📌 Source : ${esc(props)}</div>` : ''}
+          ${relProps !== '—' ? `<div style="font-size:12px; opacity:0.6; margin-bottom:4px;">🔗 Relation : ${esc(relProps)}</div>` : ''}
+          ${targetProps !== '—' ? `<div style="font-size:12px; opacity:0.6;">📌 Cible : ${esc(targetProps)}</div>` : ''}
+        </div>
+      `;
+    });
+
+    if (rows.length === 0) {
+      cardsHTML += `<p style="opacity:0.5; text-align:center; margin-top:40px;">Aucune donnée à afficher.</p>`;
+    }
+
+    tableContainer.innerHTML = cardsHTML;
+
+  } else {
+    // ✅ Vue tableau desktop — ton code existant
+    let tableHTML = `
+      <h4 style="margin-bottom:20px; color:#fff;">Liste des Nœuds et Liaisons Détectées</h4>
+      <table class="data-table" style="text-align:left; width:100%; border-collapse:collapse;">
+        <thead style="position:sticky; top:0; background-color:#042042; z-index:10; box-shadow:0 2px 2px 2px #c9c9c9;">
+          <tr>
+            <th style="background-color:#042042; padding:10px;">Catégorie</th>
+            <th style="background-color:#042042; padding:10px;">Source</th>
+            <th style="background-color:#042042; padding:10px;">Propriétés Source</th>
+            <th style="background-color:#042042; padding:10px;">Relation</th>
+            <th style="background-color:#042042; padding:10px;">Propriétés Relation</th>
+            <th style="background-color:#042042; padding:10px;">Cible</th>
+            <th style="background-color:#042042; padding:10px;">Propriétés Cible</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    rows.forEach(({ edge, fromNode, toNode }) => {
+      const cat = fromNode.category || 'Général';
+
+      const makeUl = (props) => {
+  if (!props) return `<span style="opacity:0.3; font-style:italic;">-</span>`;
   
+  // ✅ Gère à la fois les arrays et les objets
+  if (Array.isArray(props)) {
+    return props.length > 0 
+      ? `<ul style="margin:0; padding-left:15px; list-style-type:disc;">${props.map(p => `<li style="margin-bottom:2px;">${esc(String(p))}</li>`).join('')}</ul>`
+      : `<span style="opacity:0.3; font-style:italic;">-</span>`;
+  }
+  
+  let li = '';
+  Object.entries(props)
+    .filter(([key]) => !['id','label','x','y','color','group','category'].includes(key))
+    .forEach(([key, value]) => {
+      const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${esc(key)}:</span> ` : '';
+      li += `<li style="margin-bottom:2px;">${labelKey}${esc(String(value))}</li>`;
+    });
+  return li 
+    ? `<ul style="margin:0; padding-left:15px; list-style-type:disc;">${li}</ul>` 
+    : `<span style="opacity:0.3; font-style:italic;">-</span>`;
+};
+
+      tableHTML += `
+        <tr>
+          <td style="vertical-align:top; padding:10px;"><span class="badge-privacy" style="font-size:1rem; padding:2px 8px;">${esc(cat)}</span></td>
+          <td style="vertical-align:top; padding:10px;"><strong style="color:var(--color_cyan);">${esc(fromNode.label || edge.from)}</strong></td>
+          <td style="vertical-align:top; padding:10px; line-height:1.3;">${makeUl(fromNode.properties)}</td>
+          <td style="vertical-align:top; padding:10px;"><i class="fa-solid fa-arrow-right" style="font-size:0.8rem; margin-right:8px; opacity:0.5;"></i>${esc(edge.label || 'Lié à')}</td>
+          <td style="vertical-align:top; padding:10px; line-height:1.3;">${makeUl(edge.properties)}</td>
+          <td style="vertical-align:top; padding:10px;"><strong>${esc(toNode.label || edge.to)}</strong></td>
+          <td style="vertical-align:top; padding:10px; line-height:1.3;">${makeUl(toNode.properties)}</td>
+        </tr>
+      `;
+    });
+
+    if (rows.length === 0) {
+      tableHTML += `<tr><td colspan="7" style="text-align:center; padding:40px; opacity:0.5;">Aucune donnée à afficher.</td></tr>`;
+    }
+
+    tableHTML += `</tbody></table>`;
+    tableContainer.innerHTML = tableHTML;
+  }
+
   tablePage.appendChild(tableContainer);
 }
 
