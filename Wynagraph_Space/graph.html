@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphe — WynaGraph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <style>
+    /* ── Sidebar sélection harmonisée Workspace ── */
+    .sel-relation-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-size: .84rem;
+      color: var(--muted-foreground);
+    }
+    .sel-relation-header b   { color: #fff; }
+    .sel-relation-arrow {
+      font-size: .75rem;
+      color: var(--cyan);
+    }
+
+    .sel-section-label {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--cyan);
+      margin: 14px 0 6px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding-bottom: 5px;
+    }
+
+    .sel-node-category {
+      font-size: .8rem;
+      color: var(--muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 10px;
+    }
+
+    .sel-props-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sel-props-list li {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 6px;
+      padding: 7px 11px;
+      font-size: .85rem;
+      line-height: 1.4;
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+    }
+    .sel-props-list li:last-child { margin-bottom: 0; }
+
+    .sel-connections-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sel-connections-list li {
+      padding: .45rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted-foreground);
+      font-size: .88rem;
+    }
+    .sel-connections-list li:last-child { border-bottom: none; }
+
+    .sel-empty {
+      color: var(--muted-foreground);
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav">
+      <a href="index.html" class="brand">WYNAGRAPH<span class="dot"> SPACE</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Galerie</a>
+        <a href="a-propos.html">À propos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="detail">
+      <a href="index.html" class="back-link">← Retour à la galerie</a>
+      <div id="header"></div>
+      <div class="detail-grid" style="margin-top:1.5rem">
+        <div class="graph-frame" id="graph"></div>
+        <aside class="sidebar">
+          <h3 id="side-title" style="color:var(--cyan);margin-bottom:.8rem;">Sélection</h3>
+          <div id="selected">
+            <p class="sel-empty">Cliquez sur un <strong style="color:#fff">nœud</strong> pour voir ses connexions,
+            ou sur une <strong style="color:var(--cyan)">relation</strong> pour voir ses propriétés.</p>
+          </div>
+          <div class="stats" id="stats"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 WynaGraph</footer>
+
+  <script src="data.js"></script>
+  <script src="graph-render.js"></script>
+  <script>
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function esc(str) {
+      if (str == null) return '';
+      return String(str).replace(/[&<>"']/g, m =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])
+      );
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    const params = new URLSearchParams(location.search);
+    const id     = params.get("id");
+    const graph  = GRAPHS.find((g) => g.id === id);
+    const header = document.getElementById("header");
+    const sel    = document.getElementById("selected");
+    const title  = document.getElementById("side-title");
+    const stats  = document.getElementById("stats");
+
+    if (!graph) {
+      header.innerHTML = `<h1>Graphe introuvable</h1><p class="lead">Ce modèle n'existe pas.</p>`;
+    } else {
+      document.title = `${graph.title} — WynaGraph`;
+      header.innerHTML = `
+        <span class="eyebrow">${esc(graph.category)}</span>
+        <h1 style="margin-top:.5rem">${esc(graph.title)}</h1>
+        <p class="lead" style="margin:1rem 0 0">${esc(graph.longDescription)}</p>`;
+
+      const { network, nodes, edges } = buildNetwork(
+        document.getElementById("graph"),
+        graph,
+        { interactive: true }
+      );
+
+      // Stats
+      stats.innerHTML = `
+        <div><strong>${graph.nodes.length}</strong> nœuds</div>
+        <div><strong>${graph.edges.length}</strong> liens</div>`;
+
+      // ── Réinitialiser la sidebar ──────────────────────────────────────────
+      function resetSidebar() {
+        title.textContent = "Sélection";
+        sel.innerHTML = `<p class="sel-empty">Cliquez sur un <strong style="color:#fff">nœud</strong> pour voir ses connexions,
+          ou sur une <strong style="color:var(--cyan)">relation</strong> pour voir ses propriétés.</p>`;
+      }
+
+      // ── Clic sur un NŒUD ─────────────────────────────────────────────────
+      function openNodePanel(nodeId) {
+        const node = graph.nodes.find((n) => n.id === nodeId);
+        if (!node) return;
+
+        title.textContent = node.label;
+
+        const connections = graph.edges
+          .filter((e) => e.source === nodeId || e.target === nodeId)
+          .map((e) => ({
+            neighbor: (e.source === nodeId ? e.target : e.source),
+            label: e.label || "",
+          }))
+          .map((c) => ({
+            ...c,
+            neighborLabel: (graph.nodes.find((n) => n.id === c.neighbor)?.label || c.neighbor),
+          }));
+
+        const catHtml = node.group
+          ? `<div class="sel-node-category">${esc(node.group)}</div>`
+          : "";
+
+        const connHtml = connections.length
+          ? `<div class="sel-section-label">Connexions (${connections.length})</div>
+             <ul class="sel-connections-list">
+               ${connections.map(c =>
+                 `<li>${esc(c.neighborLabel)}${c.label ? `<br><span style="font-size:.78rem;color:var(--cyan)">${esc(c.label)}</span>` : ""}</li>`
+               ).join("")}
+             </ul>`
+          : `<p class="sel-empty" style="margin-top:8px">Aucune connexion directe.</p>`;
+
+        sel.innerHTML = catHtml + connHtml;
+      }
+
+      // ── Clic sur une ARÊTE ───────────────────────────────────────────────
+      function openEdgePanel(edgeId) {
+        const edge = edges.get(edgeId);
+        if (!edge) return;
+
+        // Retrouver les labels des nœuds source/cible
+        const fromLabel = graph.nodes.find(n => n.id === edge.from)?.label || edge.from;
+        const toLabel   = graph.nodes.find(n => n.id === edge.to  )?.label || edge.to;
+
+        title.textContent = "Relation";
+
+        const propsHtml = (edge.properties && edge.properties.length)
+          ? `<div class="sel-section-label">Propriétés</div>
+             <ul class="sel-props-list">
+               ${edge.properties.map(p => `<li>${esc(p)}</li>`).join("")}
+             </ul>`
+          : `<p class="sel-empty" style="margin-top:10px;font-size:.82rem;">Aucune propriété définie pour cette relation.</p>`;
+
+        sel.innerHTML = `
+          <div class="sel-relation-header">
+            <b>${esc(fromLabel)}</b>
+            <span class="sel-relation-arrow">→</span>
+            <b>${esc(toLabel)}</b>
+          </div>
+          ${edge.label
+            ? `<div class="sel-section-label">Type de relation</div>
+               <p style="font-size:.9rem;color:#fff;margin-bottom:8px;">${esc(edge.label)}</p>`
+            : ""}
+          ${propsHtml}
+        `;
+      }
+
+      // ── Événements réseau ─────────────────────────────────────────────────
+      network.on("click", (params) => {
+        if (params.nodes.length > 0) {
+          openNodePanel(params.nodes[0]);
+        } else if (params.edges.length > 0) {
+          openEdgePanel(params.edges[0]);
+        } else {
+          resetSidebar();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
