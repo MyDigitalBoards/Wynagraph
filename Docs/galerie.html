@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galerie — WynaGraph Space</title>
+  <meta name="description" content="Tous les graphes WynaGraph classés par thème." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    .gallery-nav {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 2rem;
+      font-size: .9rem;
+      color: var(--muted-foreground);
+      flex-wrap: wrap;
+    }
+    .gallery-nav a, .gallery-nav button {
+      background: none; border: none; padding: 0;
+      color: var(--cyan); cursor: pointer;
+      font-size: .9rem; font-family: inherit; text-decoration: none;
+    }
+    .gallery-nav a:hover, .gallery-nav button:hover { text-decoration: underline; }
+    .gallery-nav .sep { color: var(--muted-foreground); }
+    .gallery-nav .current { color: var(--foreground); font-weight: 600; }
+
+    .group-grid {
+      display: grid;
+      gap: 1.1rem;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    }
+    .group-tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem 1.4rem;
+      cursor: pointer;
+      transition: all .22s;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .group-tile:hover {
+      border-color: rgba(66,235,226,.55);
+      box-shadow: var(--shadow-tile), var(--glow-cyan);
+      transform: translateY(-3px);
+    }
+    .group-tile-icon  { font-size: 1.5rem; line-height: 1; }
+    .group-tile-name  { font-size: 1rem; font-weight: 600; color: var(--foreground); }
+    .group-tile-count { font-size: .8rem; color: var(--muted-foreground); }
+    .group-tile-cats  {
+      font-size: .75rem; color: var(--muted-foreground);
+      line-height: 1.5; border-top: 1px solid var(--border);
+      padding-top: .5rem; margin-top: .2rem;
+    }
+
+    #graphs-view { display: none; }
+
+    .cat-group-header {
+      display: flex; align-items: center; gap: .7rem;
+      margin: 2rem 0 1rem; grid-column: 1 / -1;
+    }
+    .cat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
+    .cat-group-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .18em; color: var(--cyan); font-weight: 600; }
+    .cat-group-line  { flex: 1; height: 1px; background: var(--border); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav">
+      <a href="index.html" class="brand">WYNAGRAPH<span class="dot"> SPACE</span></a>
+      <nav class="nav-links">
+        <a href="galerie.html">Galerie</a>
+        <a href="index.html#articles">Articles</a>
+        <a href="a-propos.html">À propos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Galerie de graphes</span>
+        <h1>Cartographie <span class="accent">et Inventaires</span></h1>
+        <p class="lead">Une collection de modèles à explorer librement. Cliquez sur un thème pour découvrir les graphes disponibles.</p>
+      </div>
+    </section>
+
+    <section id="galerie" class="section">
+      <nav class="gallery-nav" id="breadcrumb" aria-label="Navigation galerie">
+        <span class="current">Tous les thèmes</span>
+      </nav>
+      <h2 class="section-title" id="gallery-title">Les thèmes</h2>
+      <p class="section-sub" id="gallery-sub">Choisissez un thème pour découvrir les graphes disponibles.</p>
+
+      <div id="groups-view">
+        <div id="group-grid" class="group-grid"></div>
+      </div>
+      <div id="graphs-view">
+        <div id="graph-grid" class="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 WynaGraph Space ·
+    <a href="index.html" style="color:var(--cyan)">Accueil</a> ·
+    <a href="a-propos.html" style="color:var(--cyan)">À propos</a>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="graph-render.js"></script>
+  <script>
+  const THEME_GROUPS = [
+    { id: "sante-bien-etre",  name: "Santé & Bien-être",      icon: "🧬", keywords: ["santé","sport","nature","bien-être","physiologie","psychologie","nutrition","biologie","écologie"] },
+    { id: "finance-droit",    name: "Finance & Droit",         icon: "⚖️", keywords: ["finance","droit","budget","administration","immobilier","économie","investissement","droits","démarches","sécurité & prévoyance"] },
+    { id: "culture-societe",  name: "Culture & Société",       icon: "🎭", keywords: ["culture","histoire","cinéma","pop culture","médias","société","littérature","mode","nostalgie"] },
+    { id: "techno-science",   name: "Technologie & Sciences",  icon: "🔭", keywords: ["technologie","science","astronomie","sécurité & assistance","administration & sécurité"] },
+    { id: "vie-pratique",     name: "Vie pratique",            icon: "🏠", keywords: ["maison","géographie","voyage","gastronomie","tourisme","développement personnel","style de vie"] },
+    { id: "business",         name: "Business",                icon: "💼", keywords: ["business","travail"] },
+  ];
+  const GROUP_DIVERS = { id: "divers", name: "Divers", icon: "📌", keywords: [] };
+
+  function findGroup(category) {
+    if (!category) return "divers";
+    const cat = category.toLowerCase();
+    for (const g of THEME_GROUPS) {
+      if (g.keywords.some(kw => cat.includes(kw))) return g.id;
+    }
+    return "divers";
+  }
+
+  function buildIndex() {
+    const index = {};
+    GRAPHS.forEach(g => {
+      const gid = findGroup(g.category);
+      if (!index[gid]) {
+        const def = THEME_GROUPS.find(t => t.id === gid) || GROUP_DIVERS;
+        index[gid] = { group: def, graphs: [], categories: new Set() };
+      }
+      index[gid].graphs.push(g);
+      if (g.category) index[gid].categories.add(g.category);
+    });
+    return index;
+  }
+
+  function renderGroups() {
+    const index = buildIndex();
+    const grid  = document.getElementById('group-grid');
+    grid.innerHTML = '';
+    const orderedIds = [
+      ...THEME_GROUPS.map(t => t.id).filter(id => index[id]),
+      ...(index['divers'] ? ['divers'] : []),
+    ];
+    orderedIds.forEach(gid => {
+      const entry = index[gid];
+      const tile  = document.createElement('div');
+      tile.className = 'group-tile';
+      tile.setAttribute('role', 'button');
+      tile.setAttribute('tabindex', '0');
+      const cats = [...entry.categories].slice(0, 4).join(', ') + (entry.categories.size > 4 ? '…' : '');
+      tile.innerHTML = `
+        <div class="group-tile-icon">${entry.group.icon}</div>
+        <div class="group-tile-name">${entry.group.name}</div>
+        <div class="group-tile-count">${entry.graphs.length} graphe${entry.graphs.length > 1 ? 's' : ''}</div>
+        ${cats ? `<div class="group-tile-cats">${cats}</div>` : ''}
+      `;
+      tile.addEventListener('click', () => showGroup(gid));
+      tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') showGroup(gid); });
+      grid.appendChild(tile);
+    });
+    document.getElementById('groups-view').style.display  = 'block';
+    document.getElementById('graphs-view').style.display  = 'none';
+    document.getElementById('gallery-title').textContent  = 'Les thèmes';
+    document.getElementById('gallery-sub').textContent    = 'Choisissez un thème pour découvrir les graphes disponibles.';
+    document.getElementById('breadcrumb').innerHTML       = `<span class="current">Tous les thèmes</span>`;
+  }
+
+  function showGroup(groupId) {
+    const index = buildIndex();
+    const entry = index[groupId];
+    if (!entry) return;
+
+    const byCategory = {};
+    entry.graphs.forEach(g => {
+      const cat = g.category || 'Sans catégorie';
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(g);
+    });
+
+    const graphGrid = document.getElementById('graph-grid');
+    graphGrid.innerHTML = '';
+
+    Object.keys(byCategory).sort().forEach(cat => {
+      const sep = document.createElement('div');
+      sep.className = 'cat-group-header';
+      sep.innerHTML = `<div class="cat-dot"></div><span class="cat-group-label">${cat}</span><div class="cat-group-line"></div>`;
+      graphGrid.appendChild(sep);
+
+      byCategory[cat].forEach(g => {
+        const card = document.createElement('a');
+        card.className = 'card';
+        card.href = `graph.html?id=${encodeURIComponent(g.id)}`;
+        card.innerHTML = `
+          <div class="card-thumb" data-id="${g.id}"></div>
+          <div class="card-body">
+            <div class="card-cat">${g.category}</div>
+            <div class="card-title">${g.title}</div>
+            <p class="card-desc">${g.description}</p>
+          </div>`;
+        graphGrid.appendChild(card);
+        buildNetwork(card.querySelector('.card-thumb'), g, { interactive: false });
+      });
+    });
+
+    document.getElementById('groups-view').style.display = 'none';
+    document.getElementById('graphs-view').style.display = 'block';
+    document.getElementById('gallery-title').textContent = `${entry.group.icon} ${entry.group.name}`;
+    document.getElementById('gallery-sub').textContent   = `${entry.graphs.length} graphe${entry.graphs.length > 1 ? 's' : ''} disponible${entry.graphs.length > 1 ? 's' : ''}.`;
+    document.getElementById('breadcrumb').innerHTML = `
+      <button onclick="renderGroups()">Tous les thèmes</button>
+      <span class="sep">›</span>
+      <span class="current">${entry.group.name}</span>`;
+    document.getElementById('galerie').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  renderGroups();
+  </script>
+</body>
+</html>
