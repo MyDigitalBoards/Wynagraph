@@ -1293,7 +1293,7 @@ function openNodeSidebar(node) {
       <input type="text" id="edit-cat" class="sidebar-edit-input" value="${esc(node.category || '')}">
     </div>
     <div class="form-group">
-      <label class="prop-label" for="edit-props">Propriétés (une par ligne)</label>
+      <label class="prop-label" for="edit-props">Propriétés</label>
       <textarea id="edit-props" class="sidebar-edit-input">${esc((node.properties || []).join('\n'))}</textarea>
     </div>
     <button class="btn btn-primary btn-full" style="margin-bottom:10px;"data-node-id="${esc(node.id)}">
@@ -1398,7 +1398,7 @@ function openEdgeSidebar(edge) {
           <input type="text" id="edit-edge-label" class="sidebar-edit-input" value="${esc(edge.label || '')}">
         </div>
         <div class="form-group">
-          <label class="prop-label">Propriétés de la relation (une par ligne)</label>
+          <label class="prop-label">Propriétés de la relation</label>
           <textarea id="edit-edge-props" class="sidebar-edit-input">${esc((edge.properties || []).join('\n'))}</textarea>
         </div>
         <button class="btn btn-primary btn-full" style="margin-bottom:10px;" data-edge-id="${esc(edge.id)}">
