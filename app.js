@@ -1,5 +1,4 @@
-
-    (function() {
+(function() {
     let network = null;
     const nodesDataSet = new vis.DataSet([]);
     const edgesDataSet = new vis.DataSet([]);
@@ -339,15 +338,17 @@ if (btnReturn) {
       hover: true, 
       selectConnectedEdges: false, 
       dragNodes: true,
-      zoomView: true,    
+      zoomView: true, 
+      zoomSpeed: 0.5,   
       dragView: true, 
     },
     physics: {
       enabled: true,
       barnesHut: { 
-        gravitationalConstant: -3500, 
+        gravitationalConstant: -800, 
         centralGravity: 0.15, 
-        springLength: 142 
+        springLength: 142 ,
+        avoidOverlap: 0.5
       },
       stabilization: { 
         enabled: true,
@@ -366,27 +367,38 @@ nodes: {
       }
     },
 
-    edges: {
-      font: { color: '#AAB4C0', size: 11, align: 'middle', strokeWidth: 3, strokeColor: '#042042' },
-      color: { color: 'rgba(255,255,255,.18)', highlight: '#42ebe2', hover: '#42ebe2' },
-      arrows: { to: { enabled: true, scaleFactor: .8 } }
-    }
+edges: {
+  arrowStrikethrough: false, 
+  smooth: {
+    type: 'continuous', 
+    roundness: 0.3 
+  },
+    font: { color: '#AAB4C0', size: 11, align: 'middle', strokeWidth: 3, strokeColor: '#042042' },
+  color: { color: 'rgba(255,255,255,.18)', highlight: '#42ebe2', hover: '#42ebe2' },
+  arrows: { to: { enabled: true, scaleFactor: 0.8 } }
+}
   };
 
   network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
   window.network = network;
 
   network.setOptions({
-  interaction: { zoomView: true, dragView: true }
+  interaction: { zoomView: true, zoomSpeed: 0.5, dragView: true }
 });
 
+  network._skipAutoFit = false;
+
 setTimeout(() => {
-  network.setOptions({ physics: { enabled: true } });
-  setTimeout(() => {
-    network.fit({ 
-      animation: { duration: 500, easingFunction: 'easeOutQuad' } 
-    });
-  }, 100);
+  if (!network._skipAutoFit) {
+    network.setOptions({ physics: { enabled: true } });
+    setTimeout(() => {
+      if (!network._skipAutoFit) {
+        network.fit({ 
+          animation: { duration: 500, easingFunction: 'easeOutQuad' } 
+        });
+      }
+    }, 100);
+  }
 }, 1500); 
 
   network.on('dragStart', params => {
@@ -398,9 +410,7 @@ setTimeout(() => {
   network.on('dragEnd', params => {
     if (params.nodes.length > 0) {
       nodesDataSet.update({ id: params.nodes[0], fixed: { x: true, y: true } });
-      
-      network.setOptions({ physics: { enabled: true } });
-    }
+      }    
   });
 
   network.on('click', params => {
@@ -847,6 +857,9 @@ function removeContextMenu() {
 function saveCurrentView() {
   const nodes = nodesDataSet.get();
   const edges = edgesDataSet.get();
+  const positions = network ? network.getPositions() : {};
+  const scale = network ? network.getScale() : 1;
+  const viewPosition = network ? network.getViewPosition() : { x: 0, y: 0 };
 
   if (nodes.length === 0) {
     showToast("Le graphe est vide, il n'y a rien à sauvegarder !","error");
@@ -870,6 +883,9 @@ function saveCurrentView() {
       
       if (confirmOverwrite) {
         existingView.data = { nodes, edges };
+        existingView.positions = positions;
+        existingView.scale = scale;
+        existingView.viewPosition = viewPosition;
         existingView.createdAt = new Date().toLocaleString(); 
         
         localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
@@ -892,6 +908,9 @@ function saveCurrentView() {
     
       if (confirmOverwriteByName) {
         savedViews[existingViewIndex].data = { nodes, edges };
+        savedViews[existingViewIndex].positions = positions;
+        savedViews[existingViewIndex].scale = scale;
+        savedViews[existingViewIndex].viewPosition = viewPosition;
         savedViews[existingViewIndex].createdAt = new Date().toLocaleString();
         
         localStorage.setItem('network_saved_views', JSON.stringify(savedViews));
@@ -912,6 +931,9 @@ function saveCurrentView() {
     id: newId,
     name: viewName.trim(),
     data: { nodes, edges },
+    positions: positions,
+    scale: scale,
+    viewPosition: viewPosition,
     createdAt: new Date().toLocaleString()
   };
 
@@ -939,38 +961,64 @@ function loadSavedViewIntoWorkspace(viewId) {
     const view = savedViews.find(v => v.id === viewId);
     if (!view) return;
 
-  
+    if (!view || !isValidView(view)) {
+      console.warn('Vue corrompue ou invalide, chargement annulé');
+      return;
+    }
+
+    const savedPositions = view.positions || {};
+    const hasPositions = Object.keys(savedPositions).length > 0;
+
+    // Injecter les positions sauvegardées dans les nœuds
+    const cleanNodes = view.data.nodes.map(n => ({
+      ...n,
+      x: hasPositions && savedPositions[n.id] ? savedPositions[n.id].x : undefined,
+      y: hasPositions && savedPositions[n.id] ? savedPositions[n.id].y : undefined,
+      fixed: { x: false, y: false }
+    }));
+
     nodesDataSet.clear();
     edgesDataSet.clear();
-    const cleanNodes = view.data.nodes.map(n => ({ ...n, fixed: { x: false, y: false }, x: undefined, y: undefined }));
-    
+
     if (!network) initNetwork();
+
+    // Désactiver la physique AVANT d'ajouter les nœuds pour figer les positions
+    if (hasPositions && network) {
+      network._skipAutoFit = true;
+      network.setOptions({ physics: { enabled: false, stabilization: { enabled: false } } });
+    }
 
     nodesDataSet.add(cleanNodes);
     edgesDataSet.add(view.data.edges);
 
-  
-    if (!view || !isValidView(view)) {
-      console.warn('Vue corrompue ou invalide, chargement annulé');
-      return;
+    if (network) {
+      if (hasPositions) {
+        // Restaurer le zoom et la position du viewport
+        if (view.scale && view.viewPosition) {
+          network.moveTo({
+            position: view.viewPosition,
+            scale: view.scale,
+            animation: { duration: 400, easingFunction: 'easeOutQuad' }
+          });
+        } else {
+          network.fit({ animation: { duration: 400, easingFunction: 'easeOutQuad' } });
+        }
+
+        // La physique se réactivera via les listeners dragEnd déjà dans initNetwork
+
+      } else {
+        // Pas de positions sauvegardées : layout automatique classique
+        network.setOptions({ physics: { enabled: true } });
+        network.once('stabilizationIterationsDone', () => {
+          network.setOptions({ physics: { enabled: false } });
+          network.fit({ animation: { duration: 500, easingFunction: 'easeOutQuad' } });
+        });
       }
+    }
+
     if (typeof syncAllDropdowns === "function") syncAllDropdowns();
     if (typeof updateAutocompleteLists === "function") updateAutocompleteLists();
     if (typeof applyFilters === "function") applyFilters();
-
-  
-    if (network) {
-        network.setOptions({ physics: { enabled: true } });
-        
-      
-        network.once('stabilizationIterationsDone', () => {
-            network.setOptions({ physics: { enabled: false } });
-          
-            network.fit({ 
-                animation: { duration: 500, easingFunction: 'easeOutQuad' } 
-            });
-        });
-    }
 
     window.location.hash = "#workspace";
 }
@@ -995,8 +1043,6 @@ window.deleteSavedView = function(viewId) {
       updateAutocompleteLists();
       showToast('🗑️ Élément supprimé');      
     }
-
-
 
 const dropZone  = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
@@ -1293,7 +1339,7 @@ function openNodeSidebar(node) {
       <input type="text" id="edit-cat" class="sidebar-edit-input" value="${esc(node.category || '')}">
     </div>
     <div class="form-group">
-      <label class="prop-label" for="edit-props">Propriétés</label>
+      <label class="prop-label" for="edit-props">Propriétés (une par ligne)</label>
       <textarea id="edit-props" class="sidebar-edit-input">${esc((node.properties || []).join('\n'))}</textarea>
     </div>
     <button class="btn btn-primary btn-full" style="margin-bottom:10px;"data-node-id="${esc(node.id)}">
@@ -1398,7 +1444,7 @@ function openEdgeSidebar(edge) {
           <input type="text" id="edit-edge-label" class="sidebar-edit-input" value="${esc(edge.label || '')}">
         </div>
         <div class="form-group">
-          <label class="prop-label">Propriétés de la relation</label>
+          <label class="prop-label">Propriétés de la relation (une par ligne)</label>
           <textarea id="edit-edge-props" class="sidebar-edit-input">${esc((edge.properties || []).join('\n'))}</textarea>
         </div>
         <button class="btn btn-primary btn-full" style="margin-bottom:10px;" data-edge-id="${esc(edge.id)}">
@@ -1516,137 +1562,6 @@ function createRelation() {
       applyFilters();
       showToast('✅ Relation créée');
 }
-
-// function renderWorkspaceTable() {
-
-//   const oldTable = document.getElementById('workspace-table-container');
-//   if (oldTable) oldTable.remove();
-
-
-//   const tablePage = document.getElementById('table');
-//   if (!tablePage) {
-//         return;
-//   }
-//   tablePage.innerHTML = ""; 
-
-//   const tableContainer = document.createElement('div');
-//   tableContainer.id = 'workspace-table-container';
-//   tableContainer.className = 'panel-glass';
-  
-
-//   tableContainer.style.position = 'relative'; 
-//   tableContainer.style.width = '100%';
-//   tableContainer.style.height = 'calc(100vh - 100px)';
-//   tableContainer.style.overflowY = 'auto';
-//   tableContainer.style.padding = '30px';
-//   tableContainer.style.boxSizing = 'border-box';
-
-
-//   let tableHTML = `
-//     <h4 style="margin-bottom:20px; color: #fff;">liste des Noeuds et Liaisons Détectées</h4>
-//     <table class="data-table" style="text-align: left; width: 100%; border-collapse: collapse;">
-//       <thead style="position: sticky; top: 0; background-color: #042042; z-index: 10; box-shadow: 0 2px 2px 2px #c9c9c9;">
-//         <tr>
-//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Catégorie</th>
-//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Source</th>
-//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Source</th>
-//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Relation</th>
-//           <th style=" position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Relation</th>
-//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Cible</th>
-//           <th style="position: sticky; text-align: left;background-color: #042042; padding: 10px;">Propriétés Cible</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//   `;
-
-  
-//   const sCat  = document.getElementById('f-cat') ? document.getElementById('f-cat').value.toLowerCase() : "";
-//   const sNode = document.getElementById('f-node') ? document.getElementById('f-node').value : "";
-//   const sRel  = document.getElementById('f-rel') ? document.getElementById('f-rel').value : "";
-
-
-//   const allEdges = edgesDataSet.get();
-
-//   allEdges.forEach(edge => {
-//     const fromNode = nodesDataSet.get(edge.from);
-//     const toNode = nodesDataSet.get(edge.to);
-
-//     if (fromNode && toNode) {
-
-//       const matchRel = !sRel || edge.label === sRel;
-//       const matchCat = !sCat || (fromNode.category && fromNode.category.toLowerCase() === sCat);
-//       const matchNode = !sNode || (edge.from === sNode || edge.to === sNode);
-
-   
-//       if (matchRel && matchCat && matchNode) {
-//         const cat = fromNode.category || 'Général';
-        
-     
-
-//         let sourceLi = '';
-//         if (fromNode.properties) {
-//           Object.entries(fromNode.properties)
-//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-//             .forEach(([key, value]) => {
-//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-//               sourceLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-//             });
-//         }
-//         const sourceUl = sourceLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${sourceLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-//         let relationLi = '';
-//         if (edge.properties) {
-//           Object.entries(edge.properties)
-//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-//             .forEach(([key, value]) => {
-//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-//               relationLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-//             });
-//         }
-//         const relationUl = relationLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${relationLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-     
-//         let targetLi = '';
-//         if (toNode.properties) {
-//           Object.entries(toNode.properties)
-//             .filter(([key]) => !['id', 'label', 'x', 'y', 'color', 'group', 'category'].includes(key))
-//             .forEach(([key, value]) => {
-//               const labelKey = isNaN(key) ? `<span style="color:rgba(255,255,255,0.5); font-size:0.8rem;">${key}:</span> ` : '';
-//               targetLi += `<li style="margin-bottom: 2px;">${labelKey}${value}</li>`;
-//             });
-//         }
-//         const targetUl = targetLi ? `<ul style="margin: 0; padding-left: 15px; list-style-type: disc;">${targetLi}</ul>` : `<span style="opacity:0.3; font-style:italic;">-</span>`;
-
-//         const sourceLabel = fromNode.label || edge.from;
-//         const targetLabel = toNode.label || edge.to;
-        
-
-//         tableHTML += `
-//          <tr>
-//             <td style="text-align: left; vertical-align: top; padding: 10px;"><span class="badge-privacy" style="font-size:1rem; padding:2px 8px;">${cat}</span></td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px;"><strong style="color:var(--color_cyan);">${sourceLabel}</strong></td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${sourceUl}</td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px;"><i class="fa-solid fa-arrow-right" style="font-size:0.8rem; margin-right:8px; opacity:0.5;"></i>${edge.label || 'Lié à'}</td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${relationUl}</td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px;"><strong>${targetLabel}</strong></td>
-            
-//             <td style="text-align: left; vertical-align: top; padding: 10px; line-height: 1.3;">${targetUl}</td>
-//           </tr>
-//         `;
-//       }
-//     }
-//   });
-
-//   tableHTML += `</tbody></table>`;
-//   tableContainer.innerHTML = tableHTML;
-  
-//   tablePage.appendChild(tableContainer);
-// }
 
 function renderWorkspaceTable() {
   const oldTable = document.getElementById('workspace-table-container');
