@@ -126,8 +126,10 @@ function loadGraphData(rawNodes, rawEdges) {
     nodesDataSet.clear();
     edgesDataSet.clear();
 
-    document.getElementById('side-title').textContent = 'Cliquez sur un nœud pour voir les informations';
+    document.getElementById('side-title').textContent = 'Cliquez sur un élément pour voir les informations';
     document.getElementById('sidebar-body').innerHTML = '';
+    const titleEl = document.getElementById('current-template-title');
+    if (titleEl && !titleEl.textContent) titleEl.textContent = 'Graphe importé';
   
        const processedNodes = rawNodes.map(n => ({
         ...n,
@@ -980,6 +982,11 @@ function loadSavedViewIntoWorkspace(viewId) {
     nodesDataSet.clear();
     edgesDataSet.clear();
 
+    document.getElementById('side-title').textContent = '';
+    document.getElementById('sidebar-body').innerHTML = '';
+    const titleEl = document.getElementById('current-template-title');
+    if (titleEl) titleEl.textContent = view.name;
+     
     if (!network) initNetwork();
 
     // Désactiver la physique AVANT d'ajouter les nœuds pour figer les positions
