@@ -28,27 +28,20 @@
             </button>
             <div class="nav-group" id="nav-links">
                 <a href="#categories" class=" btn btn-nav">Modèles</a>
-                <button id="btn-save-view" class=" btn btn-nav">Sauvegarder
-                </button>
                 <a href="#saved-views" class=" btn btn-nav">Mes graphes
                 </a>
                 <a href="#workspace"  id="#switch-view" class="btn btn-nav">
                 <span>Vue Graphe</span></a>
                 <a href="#table"  id="#switch-view" class="btn btn-nav">
-                <span>Vue Tableau</span></a>
-                
+                <span>Vue Tableau</span></a>                
             </div>
             <div class="nav-group" id="nav-actions">
+              <div id="nav-workspace-actions" style="display:none; align-items:center; gap:12px;">
+                <button id="btn-save-view" class=" btn btn-nav">Sauvegarder
+                </button>
+                <button class="btn btn-cta" id="btn-export-modal">Exporter</button>
+              </div>
                 <a href="#import"  class=" btn btn-cta">Importer</a>
-                <button class="btn btn-cyan btn-sm" id="btn-export-csv">
-                <i class="fa-solid fa-download"></i> export .csv)
-                </button>
-                <button class="btn btn-cyan btn-sm" onclick="exportGraphImage('png')">
-                  <i class="fa-solid fa-image"></i> export PNG
-                </button>
-                <button class="btn btn-cyan btn-sm" id="btn-export-json">
-                <i class="fa-solid fa-file-code"></i>export .json)
-                </button>
                 <span class="badge-local">🔒</span> 
             </div>            
         </nav>
@@ -208,6 +201,21 @@
                         <a href="#categories" class="btn btn-cta" id="btn-return-trigger">Retour à la démo</a>
                     </div>
                 </dialog> 
+
+                <dialog id="export-modal" class="modal-overlay">
+                  <div class="modal-content panel-glass" style="align-items: center" width="100%">
+                    <h3>Exporter le graphe</h3>
+                    <p>Choisissez le format d'export souhaité.</p>
+                
+                    <button class="btn btn-cta" id="btn-export-csv">Format .csv
+                    </button>
+                    <button class="btn btn-cta" id="btn-export-json">Format .json
+                    </button>
+                    <button class="btn btn-cta" id="btn-export-png">Format .png
+                    </button>
+                    <button id="btn-close-export" style="background:none">Annuler</button>
+                  </div>
+                </dialog>
                 <!-- Overlay drawer mobile -->
                 <div class="drawer-overlay" id="drawer-overlay"></div>
 

@@ -533,7 +533,10 @@ function router() {
     }
   }
 
-
+  const navWorkspaceActions = document.getElementById('nav-workspace-actions');
+  if (navWorkspaceActions) {
+    navWorkspaceActions.style.display = cleanHash === '#workspace' ? 'flex' : 'none';
+}
   if (cleanHash === '#workspace') {
     setTimeout(() => {
       if (network) {
@@ -623,6 +626,36 @@ window.addEventListener("DOMContentLoaded", () => {
       }, 1500);
     }); 
   } 
+
+// Ouvrir la modale export
+const btnExportModal = document.getElementById('btn-export-modal');
+const exportModal = document.getElementById('export-modal');
+const btnCloseExport = document.getElementById('btn-close-export');
+
+function openExportModal() {
+    if (!nodesDataSet || nodesDataSet.length === 0) {
+        showToast("Il n'y a aucun graphique affiché à exporter !", "error");
+        return;
+    }
+    exportModal.classList.add('active');
+}
+
+if (btnExportModal) btnExportModal.addEventListener('click', openExportModal);
+if (btnCloseExport) btnCloseExport.addEventListener('click', () => exportModal.classList.remove('active'));
+exportModal.addEventListener('click', e => { if (e.target === exportModal) exportModal.classList.remove('active'); });
+
+document.getElementById('btn-export-csv').addEventListener('click', () => {
+    exportModal.classList.remove('active'); exportCSV();
+});
+document.getElementById('btn-export-json').addEventListener('click', () => {
+    exportModal.classList.remove('active'); exportToJSON();
+});
+document.getElementById('btn-export-png').addEventListener('click', () => {
+    exportModal.classList.remove('active'); exportGraphImage('png');
+});
+ 
+
+
   const exportBtn = document.getElementById('btn-export-csv');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
