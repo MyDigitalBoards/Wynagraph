@@ -307,31 +307,7 @@ function setupUserTileDeleteEvents() {
 }
 
 
-function openPaywall() {
-    const paywallModal = document.getElementById("paywall-modal");
-    if (paywallModal) {
-        paywallModal.classList.add("active");
-    } 
-}
-
-
-function closePaywall() {
-    const paywallModal = document.getElementById("paywall-modal");
-    if (paywallModal) {
-        paywallModal.classList.remove("active");
-    }
-}
-
-    const btnClosePaywall = document.getElementById("btn-close-trigger");
-    if (btnClosePaywall) {
-        btnClosePaywall.addEventListener("click", closePaywall);
-    }
-    const btnReturn = document.getElementById("btn-return-trigger");
-if (btnReturn) {
-    btnReturn.addEventListener("click", closePaywall);
-    }
-
-    function initNetwork() {
+       function initNetwork() {
   const container = document.getElementById('graph-container');
   
 
