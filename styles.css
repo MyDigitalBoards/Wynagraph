@@ -308,7 +308,10 @@ h3 {
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease, border-color 0.2s ease;
+  text-align: center;
+  width: 100%
 }
+
 .preset-tile:hover {
   transform: translateY(-5px); 
   border-color: var(--secondary_700);
@@ -382,6 +385,7 @@ h3 {
   margin: 0;
   padding: 0;
 }
+
 
 .modal-overlay {
       position: fixed; 

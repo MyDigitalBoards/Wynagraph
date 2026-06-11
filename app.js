@@ -205,7 +205,7 @@ function renderPresetTiles() {
   const premiumConfig = tileConfig.find(item => item.id === 'new-category') || {
         title: "Modèle Personnalisé",
         icon: "fa-crown",
-        desc: "Importez votre propre fichier CSV/Excel pour générer une cartographie sur mesure."
+        desc: "Créez simplement depuis le Workspace"
     };
 
   premiumTile.innerHTML = `
@@ -218,8 +218,8 @@ function renderPresetTiles() {
     `;
 
   premiumTile.addEventListener('click', () => {
-        openPaywall();
-  });
+  window.location.hash = '#workspace';
+});
     gridContainer.appendChild(premiumTile);
 }
 
